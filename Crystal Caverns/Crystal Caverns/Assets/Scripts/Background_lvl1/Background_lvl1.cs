@@ -22,7 +22,10 @@ public class ParallaxLayer : MonoBehaviour
     {
         Vector3 deltaMovement = target.position - previousTargetPosition;
 
-        // Инвертируем движение для эффекта параллакса
+        // Ігноруємо вісь Y
+        deltaMovement.y = 0f;
+
+        // Інвертуємо рух для ефекту паралаксу лише по X
         transform.position -= deltaMovement * parallaxMultiplier;
 
         previousTargetPosition = target.position;

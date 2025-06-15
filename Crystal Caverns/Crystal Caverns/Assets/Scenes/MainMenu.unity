@@ -456,7 +456,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   musicMixerGroup: {fileID: 4707931554043860892, guid: ce0e16a0ef9883545b4a6b2a50d77692, type: 2}
   sfxMixerGroup: {fileID: 8809613986231498065, guid: ce0e16a0ef9883545b4a6b2a50d77692, type: 2}
-  musicTracks: []
+  musicTracks:
+  - name: Main Menu Theme
+    clip: {fileID: 8300000, guid: 3dbad912b8c010246a43bf8059a4d9db, type: 3}
+    volume: 0.199
+    pitch: 1
+    loop: 1
+    playOnAwake: 1
+    source: {fileID: 0}
   musicFadeDuration: 1
   soundEffects:
   - name: Jump test

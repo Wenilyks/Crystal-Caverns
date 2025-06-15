@@ -11,7 +11,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 'Ground '
+  - 
+  - ground
+  - tree
   - 
   - 
   - 
@@ -33,13 +35,17 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
+  - hero
   - FadeCanvas
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Hero
+    uniqueID: 789508269
+    locked: 0
+  - name: Tree
+    uniqueID: 1992209051
     locked: 0
   m_RenderingLayers:
   - Default
