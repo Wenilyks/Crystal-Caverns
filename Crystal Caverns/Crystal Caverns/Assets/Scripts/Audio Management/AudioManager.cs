@@ -175,6 +175,7 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning($"Sound effect '{name}' not found!");
             return;
         }
+        Debug.Log("Playing sfx");
 
         PlaySFX(sfx.clip, sfx.volume, sfx.pitch);
     }
@@ -190,6 +191,7 @@ public class AudioManager : MonoBehaviour
         sfxSource.volume = volume * sfxVolume;
         sfxSource.pitch = pitch;
         sfxSource.Play();
+        Debug.Log("SFX played");
 
         activeSfxSources.Add(sfxSource);
         StartCoroutine(ReturnSFXToPool(sfxSource, clip.length / pitch));
@@ -264,6 +266,7 @@ public class AudioManager : MonoBehaviour
         UpdateMusicVolume();
         OnMusicVolumeChanged?.Invoke(musicVolume);
         SaveVolumeSettings();
+        Debug.Log($"volume: {volume}");
     }
 
     public void SetSfxVolume(float volume)

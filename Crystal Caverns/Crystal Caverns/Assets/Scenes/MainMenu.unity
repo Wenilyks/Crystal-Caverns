@@ -456,16 +456,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   musicMixerGroup: {fileID: 4707931554043860892, guid: ce0e16a0ef9883545b4a6b2a50d77692, type: 2}
   sfxMixerGroup: {fileID: 8809613986231498065, guid: ce0e16a0ef9883545b4a6b2a50d77692, type: 2}
-  musicTracks:
-  - name: test_theme
-    clip: {fileID: 8300000, guid: a4730f0c3eeeb3940b80946419472344, type: 3}
-    volume: 0.8
-    pitch: 1
-    loop: 1
-    playOnAwake: 1
-    source: {fileID: 0}
+  musicTracks: []
   musicFadeDuration: 1
-  soundEffects: []
+  soundEffects:
+  - name: Jump test
+    clip: {fileID: 8300000, guid: 25e55721a641e6944968d0c7742d6c43, type: 3}
+    volume: 0.522
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
   sfxPoolSize: 10
   masterVolume: 1
   musicVolume: 1
@@ -1856,6 +1856,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1422761700}
   m_CullTransparentMesh: 1
+--- !u!1 &1647845723
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1647845725}
+  - component: {fileID: 1647845724}
+  m_Layer: 0
+  m_Name: AudioTester
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1647845724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1647845723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27fa1228db2306649972cedd4f567183, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioTester
+--- !u!4 &1647845725
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1647845723}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 629.22595, y: 170.46005, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1651443964
 GameObject:
   m_ObjectHideFlags: 0
@@ -2075,3 +2119,4 @@ SceneRoots:
   - {fileID: 570223524}
   - {fileID: 1815169468}
   - {fileID: 443380028}
+  - {fileID: 1647845725}
