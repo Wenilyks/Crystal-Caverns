@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour
     {
         if (!player)
         {
-            player = FindObjectOfType<Hero>().transform;
+            player = FindObjectOfType<PlayerController>().transform;
         }
 
         Camera cam = Camera.main;
