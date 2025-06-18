@@ -83,7 +83,6 @@ public class PlayerAnimator : MonoBehaviour
 
                 // Flip colliders
                 _player._col.offset = new Vector2(-_player._col.offset.x, _player._col.offset.y);
-                _player._bCol.offset = new Vector2(-_player._bCol.offset.x, _player._bCol.offset.y);
 
                 wasFacingRight = shouldFaceRight;
             }

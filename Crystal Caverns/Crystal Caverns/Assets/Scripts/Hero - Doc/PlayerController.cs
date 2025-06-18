@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
     private void HandleJump()
     {
-        if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _rb.velocity.y > 0) _endedJumpEarly = true;
+        if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _rb.linearVelocity.y > 0) _endedJumpEarly = true;
 
         if (!_jumpToConsume && !HasBufferedJump) return;
 
@@ -192,7 +192,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
     private void ApplyMovement()
     {
-        _rb.velocity = _frameVelocity;
+        _rb.linearVelocity = _frameVelocity;
     }
 
 #if UNITY_EDITOR
