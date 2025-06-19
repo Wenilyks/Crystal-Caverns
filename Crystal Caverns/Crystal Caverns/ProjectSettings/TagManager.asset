@@ -11,10 +11,10 @@ TagManager:
   - 
   - Water
   - UI
+  - Tree
+  - Ground
+  - obj
   - 
-  - ground
-  - tree
-  - walls
   - 
   - 
   - 
@@ -46,6 +46,12 @@ TagManager:
     locked: 0
   - name: Tree
     uniqueID: 1992209051
+    locked: 0
+  - name: obj
+    uniqueID: 1353204963
+    locked: 0
+  - name: Ground
+    uniqueID: 387439301
     locked: 0
   m_RenderingLayers:
   - Default

@@ -22,18 +22,18 @@ AnimationClip:
     curve:
     - time: 0
       value: {fileID: 2050975831220902898, guid: fff5270b50feddb43a1b08b2f9a1ef85, type: 3}
-    - time: 0.2
+    - time: 0.21666667
       value: {fileID: -3530010921297503694, guid: 2404f4ca55ba56a4b93a82807a691840, type: 3}
-    - time: 0.4
+    - time: 0.41666666
       value: {fileID: -2495113993369431565, guid: 9785390e0349a934590258f7690edfa7, type: 3}
-    - time: 0.6
+    - time: 0.6333333
       value: {fileID: 981381079672415326, guid: fb8e27b03cb9a3e47846429c157f588a, type: 3}
-    - time: 0.8
+    - time: 0.8333333
       value: {fileID: 6980414773558467125, guid: 76ede75867b777645b3104788e9141c8, type: 3}
     - time: 1
       value: {fileID: 8762964188819179665, guid: e9dc1b7266e88ea4a909905932842fd3, type: 3}
     attribute: m_Sprite
-    path: Doc
+    path: 
     classID: 212
     script: {fileID: 0}
     flags: 2
@@ -45,7 +45,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 3188505476
+      path: 0
       attribute: 0
       script: {fileID: 0}
       typeID: 212

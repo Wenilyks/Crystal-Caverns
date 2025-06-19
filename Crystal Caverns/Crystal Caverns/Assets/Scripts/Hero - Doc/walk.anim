@@ -26,16 +26,16 @@ AnimationClip:
       value: {fileID: 6687434302155555072, guid: 976d5e8578ef4dd43bc6b7b0d6e0e893, type: 3}
     - time: 0.33333334
       value: {fileID: 4149194242816983619, guid: 2bd016f5ca86ad84981906c13fc73a98, type: 3}
-    - time: 0.5
+    - time: 0.51666665
       value: {fileID: 6045293819599579914, guid: 2c6cbdd1f616dd54bb56728b632b8baa, type: 3}
-    - time: 0.6666667
+    - time: 0.68333334
       value: {fileID: 5665637126070598381, guid: f8b8ab4d40509e14e94724346c6eac62, type: 3}
-    - time: 0.8333333
+    - time: 0.85
       value: {fileID: -6227260553244539247, guid: 46e1f21b613410f47beaf03fa881927d, type: 3}
     - time: 1
       value: {fileID: 8762964188819179665, guid: e9dc1b7266e88ea4a909905932842fd3, type: 3}
     attribute: m_Sprite
-    path: Doc
+    path: 
     classID: 212
     script: {fileID: 0}
     flags: 2
@@ -47,7 +47,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 3188505476
+      path: 0
       attribute: 0
       script: {fileID: 0}
       typeID: 212
