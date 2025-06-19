@@ -233,7 +233,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 213103213}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 443380027}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: PlaySFX
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Button click
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &213103213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,7 +398,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 304795368}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 443380027}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: PlaySFX
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Button click
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &304795368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -468,6 +492,13 @@ MonoBehaviour:
   soundEffects:
   - name: Jump test
     clip: {fileID: 8300000, guid: 25e55721a641e6944968d0c7742d6c43, type: 3}
+    volume: 0.522
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: Button click
+    clip: {fileID: 8300000, guid: 9445e27c2958baa45a6e0c4f53742a5c, type: 3}
     volume: 0.522
     pitch: 1
     loop: 0
@@ -847,6 +878,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: ChooseLevel
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 443380027}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: PlaySFX
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Button click
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &780394811
@@ -2021,7 +2064,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1651443969}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 443380027}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: PlaySFX
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Button click
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1651443969
 MonoBehaviour:
   m_ObjectHideFlags: 0
