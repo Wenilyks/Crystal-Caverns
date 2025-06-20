@@ -79,6 +79,8 @@ public class PauseManager : MonoBehaviour
 
         musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
         sfxVolumeSlider.onValueChanged.AddListener(SetSfxVolume);
+        musicToggle.onValueChanged.AddListener(SwitchMusicVolume);
+        sfxToggle.onValueChanged.AddListener(SwitchSfxVolume);
     }
 
     private void FindPlayerComponents()
@@ -193,7 +195,7 @@ public class PauseManager : MonoBehaviour
     private void PauseAllAudio()
     {
         AudioManager.Instance.StopAllSFX();
-        AudioManager.Instance.StopMusic();
+        AudioManager.Instance.PauseMusic();
     }
 
     private void ResumeAllAudio()
@@ -221,6 +223,30 @@ public class PauseManager : MonoBehaviour
         }
         PlayerPrefs.SetFloat("SfxVolume", volume);
         PlayerPrefs.Save(); // Force save immediately
+    }
+
+    public void SwitchMusicVolume(bool isOn)
+    {
+        if (isOn)
+        {
+            SetMusicVolume(musicVolumeSlider.value);    
+        }
+        else
+        {
+            SetMusicVolume(0f);
+        }
+    }
+
+    public void SwitchSfxVolume(bool isOn)
+    {
+        if (isOn)
+        {
+            SetSfxVolume(sfxVolumeSlider.value);
+        }
+        else
+        {
+            SetSfxVolume(0f);
+        }
     }
 
     private void PlayButtonSound()
