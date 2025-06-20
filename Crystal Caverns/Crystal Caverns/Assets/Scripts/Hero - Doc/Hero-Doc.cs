@@ -27,6 +27,7 @@ public class Hero : MonoBehaviour
 
     private void Awake()
     {
+
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         anim = spriteHolder.GetComponent<Animator>(); // Animator на дочернем объекте

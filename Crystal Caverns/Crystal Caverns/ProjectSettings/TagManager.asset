@@ -41,9 +41,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Hero
-    uniqueID: 789508269
-    locked: 0
   - name: Tree
     uniqueID: 1992209051
     locked: 0
@@ -52,6 +49,12 @@ TagManager:
     locked: 0
   - name: Ground
     uniqueID: 387439301
+    locked: 0
+  - name: Enemy
+    uniqueID: 975925439
+    locked: 0
+  - name: Hero
+    uniqueID: 789508269
     locked: 0
   m_RenderingLayers:
   - Default
