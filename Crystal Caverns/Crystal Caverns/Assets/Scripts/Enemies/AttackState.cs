@@ -4,6 +4,7 @@ public class AttackState : EnemyState
 {
     private float attackTimer = 0f;
     private bool isAttacking = false;
+    private bool hasDealtDamage = false;
 
     public AttackState(EnemyController enemy) : base(enemy) { }
 
@@ -11,6 +12,7 @@ public class AttackState : EnemyState
     {
         enemy.Stop();
         isAttacking = false;
+        hasDealtDamage = false;
         attackTimer = 0f;
     }
 
@@ -34,6 +36,12 @@ public class AttackState : EnemyState
         {
             attackTimer += Time.deltaTime;
 
+            if (!hasDealtDamage && attackTimer >= 0.25f)
+            {
+                DealDamage();
+                hasDealtDamage = true;
+            }
+
             if (attackTimer >= 0.5f)
             {
                 EndAttack();
@@ -50,25 +58,19 @@ public class AttackState : EnemyState
         Debug.Log("Attacking lol");
     }
 
+    private void DealDamage()
+    {
+        if (enemy.IsPlayerInAttackRange())
+        {
+            Debug.Log("Dealing damage");
+        }
+    }
+
     private void EndAttack()
     {
         isAttacking = false;
         enemy.lastAttackTime = Time.time;   
         enemy.animator.SetInteger("state", 0);
-
-        if (enemy.IsPlayerInAttackRange())
-        {
-            return;
-        }
-
-        if (enemy.CanSeePlayer())
-        {
-            enemy.ChangeState(enemy.chaseState);
-        }
-        else
-        {
-            enemy.ChangeState(enemy.patrolState);
-        }
     }
 
     public override void Exit()
