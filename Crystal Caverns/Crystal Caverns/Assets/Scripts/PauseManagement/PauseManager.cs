@@ -173,8 +173,8 @@ public class PauseManager : MonoBehaviour
 
         if (playerRb != null)
         {
-            pausedVelocity = playerRb.velocity;
-            playerRb.velocity = Vector2.zero;
+            pausedVelocity = playerRb.linearVelocity;
+            playerRb.linearVelocity = Vector2.zero;
             playerRb.bodyType = RigidbodyType2D.Kinematic;
         }
     }
@@ -188,7 +188,7 @@ public class PauseManager : MonoBehaviour
         if (playerRb != null)
         {
             playerRb.bodyType = RigidbodyType2D.Dynamic;
-            playerRb.velocity = pausedVelocity;
+            playerRb.linearVelocity = pausedVelocity;
         }
     }
 
