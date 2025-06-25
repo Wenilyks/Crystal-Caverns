@@ -5,8 +5,8 @@ public class ChaseState : EnemyState
     private float lostPlayerTimer = 0f;
     private float lostPlayerTime = 2f;
     private float stuckTimer = 0f;
-    private float stuckCheckTime = 0.6f;
-    private float finalStuckCheckTime = 0.7f;
+    private float stuckCheckTime = 0.7f;
+    private float finalStuckCheckTime = 0.8f;
     private Vector2 lastPosition;
 
     public ChaseState(EnemyController enemy) : base(enemy) { }
@@ -52,7 +52,7 @@ public class ChaseState : EnemyState
     {
         float distanceMoved = Vector2.Distance(enemy.transform.position, lastPosition);
 
-        if (distanceMoved < 0.1f)
+        if (distanceMoved < 0.05f)
         {
             stuckTimer += Time.deltaTime;
             

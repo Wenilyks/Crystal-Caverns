@@ -16,12 +16,14 @@ public class SecretBush : MonoBehaviour
 
     [Header("UI")]
     public GameObject interactionPrompt;
-    public KeyCode interactionKey = KeyCode.E;
+    public KeyCode interactionKey = KeyCode.X;
 
     [Header("Effects")]
     public ParticleSystem magicalParticles;
     public AudioClip rustleSound;
     public AudioClip teleportSound;
+
+    public float promptFadeSpeed = 2f;
 
     private Transform player;
     private Vector3 originalPosition;
@@ -29,6 +31,8 @@ public class SecretBush : MonoBehaviour
     private bool isAnimating = false;
     private bool secretDiscovered = false;
     private CanvasGroup fadePanel;
+    private CanvasGroup promptCanvasGroup;
+
 
     private void Start()
     {
@@ -39,7 +43,8 @@ public class SecretBush : MonoBehaviour
         SetupFadePanel();
 
         if (interactionPrompt != null)
-            interactionPrompt.SetActive(false);
+            promptCanvasGroup = interactionPrompt.GetComponent<CanvasGroup>();
+
 
         if (magicalParticles != null)
             magicalParticles.Stop();
@@ -65,7 +70,7 @@ public class SecretBush : MonoBehaviour
             OnPlayerEnterRange();
         }
 
-        else if (!playerInRange && !wasInRange)
+        else if (!playerInRange && wasInRange)
         {
             OnPlayerExitRange();
         }
@@ -76,7 +81,7 @@ public class SecretBush : MonoBehaviour
         isAnimating = true;
 
         if (interactionPrompt != null)
-            interactionPrompt.SetActive(true);
+            SetPromptVisibility(true);
 
         if (magicalParticles != null)
             magicalParticles.Play();
@@ -87,7 +92,7 @@ public class SecretBush : MonoBehaviour
         isAnimating = false;
 
         if (interactionPrompt != null)
-            interactionPrompt.SetActive(false);
+            SetPromptVisibility(false);
 
         if (magicalParticles != null)
             magicalParticles.Stop();
@@ -110,6 +115,37 @@ public class SecretBush : MonoBehaviour
         {
             StartCoroutine(ActivateSecret());
         }
+    }
+
+    private void SetPromptVisibility(bool visible, bool immediate = false)
+    {
+        if (promptCanvasGroup == null) return;
+
+        StopCoroutine("FadePrompt");
+        StartCoroutine(FadePrompt(visible ? 1f : 0f, immediate));
+    }
+
+    private IEnumerator FadePrompt(float toAlpha, bool immediate)
+    {
+        if (immediate)
+        {
+            promptCanvasGroup.alpha = toAlpha;
+            yield break;
+        }
+
+        float fromAlpha = promptCanvasGroup.alpha;
+
+        float elapsed = 0f;
+
+        while (elapsed < promptFadeSpeed)
+        {
+            elapsed += Time.deltaTime; 
+            float t = elapsed / promptFadeSpeed;
+            promptCanvasGroup.alpha = Mathf.Lerp(fromAlpha, toAlpha, t);
+            yield return null;
+        }
+
+        promptCanvasGroup.alpha = toAlpha;
     }
 
     private IEnumerator ActivateSecret()

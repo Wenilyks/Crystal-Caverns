@@ -181,11 +181,11 @@ public class EnemyController : MonoBehaviour
             Vector2 upDirection = direction + Vector2.up * 0.5f;
             RaycastHit2D upHit = Physics2D.Raycast(transform.position, upDirection.normalized, 1f, obstacleLayer);
 
-            if (upHit.collider == null && ShouldJump(direction))
-            {
-                Jump(direction);
-                return;
-            }
+            //if (upHit.collider == null && ShouldJump(direction))
+            //{
+            //    Jump(direction);
+            //    return;
+            //}
         }
 
         Vector2 targetVelocity = new Vector2(direction.x * speed, rb.linearVelocity.y);
