@@ -35,6 +35,8 @@ public class FlyingEnemyController : MonoBehaviour
     [Header("State Machine")]
     public FlyingEnemyState currentState { get; private set; }
     public FlyingPatrolState patrolState { get; private set; } 
+    public FlyingChaseState chaseState { get; private set; }
+    public FlyingAttackState attackState { get; private set; }  
 
     public string currentStateString = "patroleState";
     public int currentPatrolIndex = 0;
@@ -53,6 +55,9 @@ public class FlyingEnemyController : MonoBehaviour
 
         // init states
         patrolState = new FlyingPatrolState(this);
+        chaseState = new FlyingChaseState(this);
+        attackState = new FlyingAttackState(this);
+        
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
@@ -144,7 +149,7 @@ public class FlyingEnemyController : MonoBehaviour
         Vector2 targetVelocity = direction * speed;
         rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, targetVelocity, Time.fixedDeltaTime * 8f);
 
-        if (direction.x > 0.1f)
+        if (direction.x >= 0.1f)
         {
             transform.localScale = new Vector3(1, 1, 1);
         } 

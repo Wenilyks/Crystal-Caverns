@@ -18079,7 +18079,7 @@ MonoBehaviour:
   bobFrequency: 1
   obstacleAvoidanceDistance: 2
   maxFlightHeight: 8
-  minFlightHeight: 0.5
+  minFlightHeight: 0
   currentStateString: patroleState
   currentPatrolIndex: 0
   lastAttackTime: 0
@@ -18095,7 +18095,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 5
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
@@ -18109,7 +18109,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!60 &729909534
 PolygonCollider2D:
   m_ObjectHideFlags: 0

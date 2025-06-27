@@ -15,7 +15,7 @@ public class FlyingPatrolState : FlyingEnemyState
     public override void Enter()
     {
         waitTimer = 0f;
-        enemy.animator.SetInteger("state", 1);
+        enemy.animator.SetInteger("state", 0);
         enemy.SetBasePosition(enemy.transform.position);
     }
 
@@ -24,7 +24,8 @@ public class FlyingPatrolState : FlyingEnemyState
         if (enemy.CanSeePlayer())
         {
             // change state to chase
-            //return;
+            enemy.ChangeState(enemy.chaseState);
+            return;
         }
 
         if (enemy.patrolPoints.Length == 0)
@@ -56,7 +57,7 @@ public class FlyingPatrolState : FlyingEnemyState
             {
                 enemy.currentPatrolIndex = (enemy.currentPatrolIndex + 1) % enemy.patrolPoints.Length;
                 waitTimer = 0f;
-                enemy.animator.SetInteger("state", 1);
+                enemy.animator.SetInteger("state", 0);
             }
         }
     }
