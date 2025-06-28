@@ -12485,6 +12485,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &662901945
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 662901946}
+  m_Layer: 0
+  m_Name: fireball position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &662901946
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662901945}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.319, y: 0.319, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1681797490}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &670900471
 GameObject:
   m_ObjectHideFlags: 0
@@ -17565,7 +17596,7 @@ GameObject:
   - component: {fileID: 695436018}
   - component: {fileID: 695436019}
   - component: {fileID: 695436020}
-  m_Layer: 0
+  m_Layer: 29
   m_Name: Mushroom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18039,7 +18070,7 @@ GameObject:
   - component: {fileID: 729909534}
   - component: {fileID: 729909533}
   - component: {fileID: 729909532}
-  m_Layer: 0
+  m_Layer: 29
   m_Name: FlyingEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18079,7 +18110,7 @@ MonoBehaviour:
   bobFrequency: 1
   obstacleAvoidanceDistance: 2
   maxFlightHeight: 8
-  minFlightHeight: 0
+  minFlightHeight: -3
   currentStateString: patroleState
   currentPatrolIndex: 0
   lastAttackTime: 0
@@ -18214,7 +18245,7 @@ GameObject:
   - component: {fileID: 766103998}
   - component: {fileID: 766104000}
   - component: {fileID: 766103999}
-  m_Layer: 0
+  m_Layer: 29
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19622,7 +19653,7 @@ GameObject:
   - component: {fileID: 970669790}
   - component: {fileID: 970669793}
   - component: {fileID: 970669795}
-  m_Layer: 0
+  m_Layer: 29
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222476,7 +222507,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.85660374, g: 0.4497715, b: 0.00484863, a: 1}
+      maxColor: {r: 0.67350775, g: 0.0039215838, b: 0.85490197, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -473849,7 +473880,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.85660374, g: 0.4497715, b: 0.00484863, a: 1}
+      maxColor: {r: 0.85490197, g: 0.73812157, b: 0.0039215838, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -480743,11 +480774,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5025997688922811475, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.9
+      value: -3.37
       objectReference: {fileID: 0}
     - target: {fileID: 5025997688922811475, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.75
+      value: -2.06
       objectReference: {fileID: 0}
     - target: {fileID: 5025997688922811475, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -480794,16 +480825,31 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6006870706029379608, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
+      propertyPath: fireballPrefab
+      value: 
+      objectReference: {fileID: 6845201832380516912, guid: cc7ada67534eacb48a85c8e758c97cb9, type: 3}
+    - target: {fileID: 6006870706029379608, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
+      propertyPath: enemyLayer.m_Bits
+      value: 536870912
+      objectReference: {fileID: 0}
+    - target: {fileID: 6006870706029379608, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
       propertyPath: groundCheckRadius
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 6006870706029379608, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
+      propertyPath: fireballSpawnPoint
+      value: 
+      objectReference: {fileID: 662901946}
     - target: {fileID: 6006870706029379608, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
       propertyPath: groundLayer.m_Bits
       value: 128
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5025997688922811475, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 662901946}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
 --- !u!1660057539 &9223372036854775807
