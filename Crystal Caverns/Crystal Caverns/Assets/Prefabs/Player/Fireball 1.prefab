@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4934972771009526292}
   - component: {fileID: 8193396423612371876}
   m_Layer: 30
-  m_Name: Fireball
+  m_Name: Fireball 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -177,7 +177,7 @@ Animator:
   m_GameObject: {fileID: 6845201832380516912}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 98eb21fe6e5dfd24394802c72c2c0c4f, type: 2}
+  m_Controller: {fileID: 9100000, guid: 6e472131ae723a745b4d68900c2e7075, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

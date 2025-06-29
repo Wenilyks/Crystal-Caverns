@@ -27,6 +27,7 @@ public class Hero2 : MonoBehaviour
 
     [Header("Combat")]
     [SerializeField] private GameObject fireballPrefab;
+    [SerializeField] private GameObject fireballPrefab2;
     [SerializeField] private Transform fireballSpawnPoint;
     [SerializeField] private float fireballSpeed = 8f;
     [SerializeField] private float attackCooldown = 0.7f;
@@ -38,7 +39,7 @@ public class Hero2 : MonoBehaviour
     [SerializeField] private LayerMask enemyLayer;
 
     [Header("Effects")]
-    [SerializeField] private GameObject goundPoundEffect;
+    [SerializeField] private GameObject groundPoundEffect;
     [SerializeField] private ParticleSystem magicAura;
 
     private bool isGrounded = false;
@@ -103,7 +104,10 @@ public class Hero2 : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.C))
             {
-                // Start ground pound attack 
+                isAttacking = true;
+                canAttack = false;
+                State = States.attackThree;
+                StartCoroutine(PerformAttack(States.attackThree));
             }
         }
 
@@ -153,6 +157,13 @@ public class Hero2 : MonoBehaviour
             StartCoroutine(SpawnFireballRain());
         }
 
+        else if (attackType == States.attackThree)
+        {
+            float animationLength = GetAnimationLength(attackType);
+            yield return new WaitForSeconds(animationLength);
+            StartCoroutine(GroundPound());
+        }
+
         isAttacking = false;
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
@@ -168,10 +179,10 @@ public class Hero2 : MonoBehaviour
 
             fireball.transform.localScale = new Vector3(0.4f * direction, 0.4f, 0.4f);
 
-            Rigidbody2D fireballRb = fireball.GetComponent<Rigidbody2D>();
-            if (fireballRb != null)
+            Fireball fireballScript = fireball.GetComponent<Fireball>();
+            if (fireballScript != null)
             {
-                fireballRb.linearVelocity = new Vector2(direction * fireballSpeed, 0);
+                fireballScript.Initialize(fireballSpeed, direction, true);
             }
 
             Destroy(fireball, 5f);
@@ -203,7 +214,7 @@ public class Hero2 : MonoBehaviour
                     0
                 );
 
-                GameObject fireball = Instantiate(fireballPrefab, spawnPoint, Quaternion.identity);
+                GameObject fireball = Instantiate(fireballPrefab2, spawnPoint, Quaternion.identity);
 
                 fireball.transform.localRotation = Quaternion.Euler(0, 0, -90f);
 
@@ -223,6 +234,34 @@ public class Hero2 : MonoBehaviour
                 yield return new WaitForSeconds(0.1f);
             }
         }
+    }
+
+    private IEnumerator GroundPound()
+    {
+        if (groundPoundEffect != null)
+        {
+            GameObject effect = Instantiate(groundPoundEffect, transform.position, Quaternion.identity);
+            Destroy(effect, 2f);
+        }
+
+        if (magicAura != null)
+        {
+            magicAura.Play();
+        }
+
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, groundPoundRadius, enemyLayer);
+
+        foreach (Collider2D enemy in hitEnemies)
+        {
+            Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
+            if (enemyRb != null)
+            {
+                Vector2 knowbackDirection = (enemy.transform.position - transform.position).normalized;
+                enemyRb.AddForce(knowbackDirection * 40, ForceMode2D.Impulse);
+            }
+        }
+
+        yield return new WaitForSeconds(2f);
     }
 
     private float GetAnimationLength(States attackType)

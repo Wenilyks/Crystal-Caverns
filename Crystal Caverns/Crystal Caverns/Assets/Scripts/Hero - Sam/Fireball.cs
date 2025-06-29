@@ -12,8 +12,50 @@ public class Fireball : MonoBehaviour
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float explosionRadius = 1f;
-
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private float detectionRadius = 10f;
+    [SerializeField] private float turnSpeed = 3f;
+    
     private bool hasExploded = false;
+    private float currentSpeed;
+    private float initialDirection;
+    private Transform targetEnemy;
+    private bool aim = false;
+
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();   
+    }
+
+    public void Initialize(float speed, float direction, bool aim)
+    {
+        currentSpeed = speed;
+        initialDirection = direction;
+        this.aim = aim;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = new Vector2(direction * speed, 0);
+        }
+    }
+
+    private void Update()
+    {
+        if (hasExploded || rb == null || !aim) return;
+
+        FindNearestEnemy();
+
+        if (targetEnemy != null)
+        {
+            MoveTowardsTarget();
+        }
+
+        else
+        {
+            rb.linearVelocity = new Vector2(initialDirection * currentSpeed, rb.linearVelocity.y);
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -24,6 +66,47 @@ public class Fireball : MonoBehaviour
         {
             Explode();
         }
+    }
+
+    private void FindNearestEnemy()
+    {
+        Collider2D[] enemiesInRange = Physics2D.OverlapCircleAll(transform.position, detectionRadius, enemyLayer);
+
+        if (enemiesInRange.Length == 0)
+        {
+            targetEnemy = null;
+            return;
+        }
+
+        float closestDistance = Mathf.Infinity;
+        Transform closestTarget = null;
+
+        foreach (var enemy in  enemiesInRange)
+        {
+            float distance = Vector2.Distance(transform.position, enemy.transform.position);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestTarget = enemy.transform;
+            }
+        }
+
+        targetEnemy = closestTarget;
+    }
+
+    private void MoveTowardsTarget()
+    {
+        if (targetEnemy == null) return;
+
+        Vector2 directionToTarget = (targetEnemy.position - transform.position).normalized;
+        Vector2 currentVelocity = rb.linearVelocity.normalized;
+
+        Vector2 newDirection = Vector2.Lerp(currentVelocity, directionToTarget, turnSpeed * Time.deltaTime);
+
+        rb.linearVelocity = newDirection * currentSpeed;
+
+        float angle = Mathf.Atan2(newDirection.y, newDirection.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(initialDirection > 0 ? angle : -angle, Vector3.forward);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -47,6 +130,13 @@ public class Fireball : MonoBehaviour
         foreach (Collider2D enemy in hitEnemies)
         {
             Debug.Log("enemy is taking damage");
+            Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
+            if (enemyRb != null)
+            {
+                Debug.Log("Pushing back");
+                Vector2 knockbackDirection = (enemy.transform.position - transform.position).normalized;
+                enemyRb.AddForce(knockbackDirection * 10f, ForceMode2D.Impulse);
+            }
         }
 
         Destroy(gameObject);

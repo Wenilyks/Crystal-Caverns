@@ -32,6 +32,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1824950004859825942}
   - {fileID: 2966819328697436182}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -83,6 +84,21 @@ MonoBehaviour:
   spriteHolder2: {fileID: 2966819328697436182}
   groundCheck: {fileID: 6600537158081535594}
   groundCheckRadius: 0.1
+  fireballPrefab: {fileID: 6845201832380516912, guid: cc7ada67534eacb48a85c8e758c97cb9, type: 3}
+  fireballPrefab2: {fileID: 6845201832380516912, guid: eadeee6edde89284a9816008e5aabbd1, type: 3}
+  fireballSpawnPoint: {fileID: 1824950004859825942}
+  fireballSpeed: 8
+  attackCooldown: 0.7
+  rainFireballCount: 5
+  rainSpread: 5
+  rainHeight: 3
+  groundPoundRadius: 3
+  groundPoundDamage: 25
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  goundPoundEffect: {fileID: 0}
+  magicAura: {fileID: 0}
 --- !u!61 &3664580079041188797
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -129,6 +145,37 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.0186048, y: 1.5120611}
   m_EdgeRadius: 0
+--- !u!1 &3094941513996482560
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1824950004859825942}
+  m_Layer: 0
+  m_Name: fireball position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1824950004859825942
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3094941513996482560}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.3769197, y: -0.62002015, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5025997688922811475}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3484596986584061036
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,7 +255,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 789508269
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 4723107735738678597, guid: b5f13bf3d53d5944e904c7c0f5343ec0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

@@ -12120,7 +12120,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -480830,6 +480830,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6006870706029379608, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
       propertyPath: fireballPrefab
+      value: 
+      objectReference: {fileID: 6845201832380516912, guid: eadeee6edde89284a9816008e5aabbd1, type: 3}
+    - target: {fileID: 6006870706029379608, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
+      propertyPath: fireballPrefab2
       value: 
       objectReference: {fileID: 6845201832380516912, guid: cc7ada67534eacb48a85c8e758c97cb9, type: 3}
     - target: {fileID: 6006870706029379608, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
