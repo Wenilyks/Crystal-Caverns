@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum States
@@ -95,7 +96,10 @@ public class Hero2 : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.X))
             {
-                // Start fireball rain attack 
+                isAttacking = true;
+                canAttack = false;
+                State = States.attackOne;
+                StartCoroutine (PerformAttack(States.attackOne));
             }
             else if (Input.GetKeyDown(KeyCode.C))
             {
@@ -137,9 +141,16 @@ public class Hero2 : MonoBehaviour
         canAttack = false;
         if (attackType == States.attackTwo)
         {
-            float animationLength = GetAnimationLength(attackType) / 1.3f;
+            float animationLength = GetAnimationLength(attackType) / 1.7f;
             yield return new WaitForSeconds(animationLength);
             SpawnFireball();
+        }
+
+        else if (attackType == States.attackOne)
+        {
+            float animationLength = GetAnimationLength(attackType);
+            yield return new WaitForSeconds(animationLength);
+            StartCoroutine(SpawnFireballRain());
         }
 
         isAttacking = false;
@@ -164,6 +175,53 @@ public class Hero2 : MonoBehaviour
             }
 
             Destroy(fireball, 5f);
+        }
+    }
+
+    public IEnumerator SpawnFireballRain()
+    {
+        Debug.Log("HERE");
+        if (fireballPrefab != null)
+        {
+            Vector3 playerPosition = transform.position;
+
+            for (int i = 0; i < rainFireballCount; i++)
+            {
+                float xOffset;
+                if (i % 2 == 0)
+                {
+                    xOffset = UnityEngine.Random.Range(0f, rainSpread);
+                }
+                else
+                {
+                    xOffset = -UnityEngine.Random.Range(0f, rainSpread);
+                }
+
+                Vector3 spawnPoint = new Vector3(
+                    playerPosition.x + xOffset,
+                    playerPosition.y + rainHeight,
+                    0
+                );
+
+                GameObject fireball = Instantiate(fireballPrefab, spawnPoint, Quaternion.identity);
+
+                fireball.transform.localRotation = Quaternion.Euler(0, 0, -90f);
+
+                Debug.Log($"Fireball spawned at: {spawnPoint}");
+
+                Rigidbody2D fireballRb = fireball.GetComponent<Rigidbody2D>();
+                if (fireballRb != null)
+                {
+                    Vector2 fallVelocity = new Vector2(
+                        Random.Range(-2f, 2f),
+                        -fireballSpeed * 0.7f
+                    );
+                    fireballRb.linearVelocity = fallVelocity;
+                }
+
+                Destroy(fireball, 4f);
+                yield return new WaitForSeconds(0.1f);
+            }
         }
     }
 

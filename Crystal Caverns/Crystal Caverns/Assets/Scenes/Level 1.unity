@@ -480774,11 +480774,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5025997688922811475, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.37
+      value: -5.5
       objectReference: {fileID: 0}
     - target: {fileID: 5025997688922811475, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.06
+      value: -3.21
       objectReference: {fileID: 0}
     - target: {fileID: 5025997688922811475, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -480823,6 +480823,10 @@ PrefabInstance:
     - target: {fileID: 6006870706029379608, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
       propertyPath: jumpForce
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6006870706029379608, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
+      propertyPath: rainHeight
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6006870706029379608, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
       propertyPath: fireballPrefab
