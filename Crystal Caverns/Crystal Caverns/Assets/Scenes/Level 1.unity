@@ -18076,7 +18076,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &729909532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19779,6 +19779,7 @@ MonoBehaviour:
   - {fileID: 1655432172}
   attackDamage: 10
   attackCooldown: 1
+  health: 100
   jumpForce: 10
   jumpCooldown: 1
   obstacleCheckDistance: 1

@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AttackState : EnemyState
@@ -62,7 +65,7 @@ public class AttackState : EnemyState
     {
         if (enemy.IsPlayerInAttackRange())
         {
-            Debug.Log("Dealing damage");
+            enemy.player.TakeDamage(enemy.attackDamage);
         }
     }
 

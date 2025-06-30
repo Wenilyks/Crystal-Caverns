@@ -20,6 +20,7 @@ public class ParallaxLayer : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (target == null) return;
         Vector3 deltaMovement = target.position - previousTargetPosition;
 
         // Ігноруємо вісь Y

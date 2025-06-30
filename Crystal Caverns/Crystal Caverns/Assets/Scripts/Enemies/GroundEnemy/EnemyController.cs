@@ -1,9 +1,9 @@
-﻿using System;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using Unity;
 
-
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IDamageable
 {
     [Header("Detection")]
     public float detectionRange = 5f;
@@ -20,6 +20,7 @@ public class EnemyController : MonoBehaviour
     [Header("Combat")]
     public float attackDamage = 10f;
     public float attackCooldown = 1f;
+    public float health = 100;
 
     [Header("Jumping")]
     public float jumpForce = 10f;
@@ -30,14 +31,16 @@ public class EnemyController : MonoBehaviour
 
     [Header("Components")]
     public Rigidbody2D rb { get; private set; }
-    public Transform player { get; private set; }
+    public Transform playerTransform { get; private set; }
+    public Hero2 player { get; private set; }
     public Animator animator { get; private set; }
 
     [Header("State Machine")]
     public EnemyState currentState { get; private set; }
     public PatrolState patrolState { get; private set; }
-    [SerializeField] public ChaseState chaseState { get; private set; }
+    public ChaseState chaseState { get; private set; }
     public AttackState attackState { get; private set; }
+    public HitState hitState { get; private set; }
 
     public string currentStateString = "patrol";
 
@@ -55,11 +58,13 @@ public class EnemyController : MonoBehaviour
         patrolState = new PatrolState(this);
         chaseState = new ChaseState(this);
         attackState = new AttackState(this);
+        hitState = new HitState(this);
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
         {
-            player = playerObj.transform;
+            playerTransform = playerObj.transform;
+            player = playerObj.GetComponent<Hero2>();
         }
 
         sqrDetectionRange = detectionRange * detectionRange;
@@ -86,13 +91,13 @@ public class EnemyController : MonoBehaviour
 
     public bool CanSeePlayer()
     {
-        if (player == null) Debug.Log("NOOO PLAYER IS NULLL");
-        if (player == null) return false;
+        if (playerTransform == null) Debug.Log("NOOO PLAYER IS NULLL");
+        if (playerTransform == null) return false;
 
-        float sqrDistToPlayer = (transform.position - player.position).sqrMagnitude;
+        float sqrDistToPlayer = (transform.position - playerTransform.position).sqrMagnitude;
         if (sqrDistToPlayer > sqrDetectionRange) return false;
 
-        Vector2 dirToPlayer = (player.position - transform.position).normalized;
+        Vector2 dirToPlayer = (playerTransform.position - transform.position).normalized;
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dirToPlayer, detectionRange, obstacleLayer);
 
         return hit.collider == null;
@@ -100,9 +105,9 @@ public class EnemyController : MonoBehaviour
 
     public bool IsPlayerInAttackRange()
     {
-        if (player == null) return false;
+        if (playerTransform == null) return false;
 
-        return Vector2.Distance(transform.position, player.position) <= attackRange;
+        return Vector2.Distance(transform.position, playerTransform.position) <= attackRange;
     }
 
     public bool IsGrounded()
@@ -145,11 +150,11 @@ public class EnemyController : MonoBehaviour
 
     public bool ShouldJumpToReachPlayer()
     {
-        if (player == null || !IsGrounded() || Time.time < lastAttackTime + jumpCooldown) return false; 
+        if (playerTransform == null || !IsGrounded() || Time.time < lastAttackTime + jumpCooldown) return false; 
 
-        if (player.position.y > transform.position.y + 1f)
+        if (playerTransform.position.y > transform.position.y + 1f)
         {
-            float horizontalDistance = Mathf.Abs(player.position.x - transform.position.x);
+            float horizontalDistance = Mathf.Abs(playerTransform.position.x - transform.position.x);
             return horizontalDistance < detectionRange;
         }
 
@@ -195,6 +200,16 @@ public class EnemyController : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
         else if (direction.x < -0.1f)
             transform.localScale = new Vector3(-1, 1, 1);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        health = Mathf.Max(health - damage, 0);
+        if (health == 0)
+        {
+            Destroy(gameObject);
+        }
+        ChangeState(hitState);
     }
 
     public void Stop()

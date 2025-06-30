@@ -30,7 +30,7 @@ public class ChaseState : EnemyState
         Debug.Log("Calling can see player function");
         if (enemy.CanSeePlayer())
         {
-            enemy.MoveTowards(enemy.player.position, enemy.chaseSpeed);
+            enemy.MoveTowards(enemy.playerTransform.position, enemy.chaseSpeed);
             lostPlayerTimer = 0f;
         }
         else
@@ -43,7 +43,7 @@ public class ChaseState : EnemyState
                 return;
             }
 
-            enemy.MoveTowards(enemy.player.position, enemy.chaseSpeed);
+            enemy.MoveTowards(enemy.playerTransform.position, enemy.chaseSpeed);
         }
 
         CheckIfStuck();
@@ -58,7 +58,7 @@ public class ChaseState : EnemyState
             
             if (stuckTimer >= stuckCheckTime && enemy.IsGrounded())
             {
-                Vector2 directionToPlayer = (enemy.player.position - enemy.transform.position).normalized;
+                Vector2 directionToPlayer = (enemy.playerTransform.position - enemy.transform.position).normalized;
                 enemy.Jump(directionToPlayer);
             }
 
@@ -85,10 +85,10 @@ public class ChaseState : EnemyState
 
     public override void OnDrawGizmos()
     {
-        if (enemy.player != null)
+        if (enemy.playerTransform != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(enemy.transform.position, enemy.player.position);
+            Gizmos.DrawLine(enemy.transform.position, enemy.playerTransform.position);
         }
     }
     

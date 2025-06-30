@@ -20,6 +20,7 @@ public class FlyingChaseState : FlyingEnemyState
 
     public override void Update()
     {
+        if (enemy.player == null) return;
         if (enemy.IsPlayerInAttackRange())
         {
             // change state to attack

@@ -1,7 +1,8 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class FlyingEnemyController : MonoBehaviour
+public class FlyingEnemyController : MonoBehaviour, IDamageable
 {
     [Header("Detection")]
     public float detectionRange = 6f;
@@ -37,6 +38,8 @@ public class FlyingEnemyController : MonoBehaviour
     public FlyingPatrolState patrolState { get; private set; } 
     public FlyingChaseState chaseState { get; private set; }
     public FlyingAttackState attackState { get; private set; }  
+    public FlyingHitState hitState { get; private set; }
+
 
     public string currentStateString = "patroleState";
     public int currentPatrolIndex = 0;
@@ -57,6 +60,7 @@ public class FlyingEnemyController : MonoBehaviour
         patrolState = new FlyingPatrolState(this);
         chaseState = new FlyingChaseState(this);
         attackState = new FlyingAttackState(this);
+        hitState = new FlyingHitState(this);    
         
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -168,6 +172,11 @@ public class FlyingEnemyController : MonoBehaviour
         Vector2 targetVelocity = direction * (patrolSpeed * 0.5f);
 
         rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, targetVelocity, Time.fixedDeltaTime * 5f);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        ChangeState(hitState);
     }
 
     public void Stop()

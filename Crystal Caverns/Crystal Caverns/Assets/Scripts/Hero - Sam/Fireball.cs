@@ -130,12 +130,19 @@ public class Fireball : MonoBehaviour
         foreach (Collider2D enemy in hitEnemies)
         {
             Debug.Log("enemy is taking damage");
+            
+
             Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
+            IDamageable enemyController = enemy.GetComponent<IDamageable>();
+            if (enemyController != null)
+            {
+                enemyController.TakeDamage(damage);
+            }
             if (enemyRb != null)
             {
                 Debug.Log("Pushing back");
                 Vector2 knockbackDirection = (enemy.transform.position - transform.position).normalized;
-                enemyRb.AddForce(knockbackDirection * 10f, ForceMode2D.Impulse);
+                enemyRb.AddForce(knockbackDirection * 2f, ForceMode2D.Impulse);
             }
         }
 

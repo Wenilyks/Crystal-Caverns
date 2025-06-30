@@ -19,6 +19,7 @@ public class Hero2 : MonoBehaviour
 {
     [SerializeField] private float speed = 3f;
     [SerializeField] private int lives = 5;
+    [SerializeField] private float health = 100;
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform spriteHolder2;
@@ -45,6 +46,7 @@ public class Hero2 : MonoBehaviour
     private bool isGrounded = false;
     private bool canAttack = true;
     private bool isAttacking = false;
+    private bool isGettingHit = false;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -70,7 +72,7 @@ public class Hero2 : MonoBehaviour
 
     private void Update()
     {
-        if (isGrounded && !isAttacking)
+        if (isGrounded && !isAttacking && !isGettingHit)
         {
             Debug.Log("Idle state lol");
             State = States.idle;
@@ -264,12 +266,38 @@ public class Hero2 : MonoBehaviour
         yield return new WaitForSeconds(2f);
     }
 
-    private float GetAnimationLength(States attackType)
+    public void TakeDamage(float damage)
+    {
+        State = States.hit;
+        isGettingHit = true;
+
+        Debug.Log("Player is taking damage");
+
+        health = Mathf.Max(health - damage, 0);
+
+        if (health == 0)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        StartCoroutine(TakeDamage());
+    }
+
+    private IEnumerator TakeDamage()
+    {
+        Debug.Log($"current state is {State.ToString()}");
+        float animationLength = GetAnimationLength(States.hit);
+        yield return new WaitForSeconds(animationLength);
+        isGettingHit = false;
+    }
+
+    private float GetAnimationLength(States state)
     {
         AnimationClip[] clips = anim.runtimeAnimatorController.animationClips;
 
         string animationName = "";
-        switch (attackType)
+        switch (state)
         {
             case States.attackOne:
                 animationName = "attackOne"; 
@@ -279,6 +307,9 @@ public class Hero2 : MonoBehaviour
                 break;
             case States.attackThree:
                 animationName = "attackThree";
+                break;
+            case States.hit:
+                animationName = "hit";
                 break;
         }
 
