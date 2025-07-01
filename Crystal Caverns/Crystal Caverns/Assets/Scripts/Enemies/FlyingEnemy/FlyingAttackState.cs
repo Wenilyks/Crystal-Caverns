@@ -45,7 +45,7 @@ public class FlyingAttackState : FlyingEnemyState
         {
             attackTimer += Time.deltaTime;
 
-            Vector2 playerPosition = enemy.player.position;
+            Vector2 playerPosition = enemy.playerTransform.position;
             Vector2 attackPosition = new Vector2(playerPosition.x, playerPosition.y + 1.5f);
             enemy.FlyTowards(attackPosition, enemy.patrolSpeed);
 
@@ -75,6 +75,7 @@ public class FlyingAttackState : FlyingEnemyState
     {
         if (enemy.IsPlayerInAttackRange())
         {
+            enemy.player.TakeDamage(enemy.attackDamage);
             Debug.Log("Flying enemy is dealing damage");
         }
     }

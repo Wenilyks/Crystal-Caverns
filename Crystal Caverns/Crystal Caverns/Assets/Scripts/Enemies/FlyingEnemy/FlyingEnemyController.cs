@@ -1,9 +1,22 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class FlyingEnemyController : MonoBehaviour, IDamageable
 {
+    [Header("Stats")]
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float currentHealth = 100f;
+
+    [Header("UI")]
+    [SerializeField] private RectTransform healthBar;
+    [SerializeField] private float maxTransform;
+
+    [Header("Animation settings")]
+    [SerializeField] private float barAnimationSpeed = 0.7f;
+
     [Header("Detection")]
     public float detectionRange = 6f;
     public float attackRange = 2.5f;
@@ -30,7 +43,8 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
 
     [Header("Components")]
     public Rigidbody2D rb { get; private set; }
-    public Transform player { get; private set; }
+    public Transform playerTransform { get; private set; }
+    public Hero2 player { get; private set; }
     public Animator animator { get; private set; }
 
     [Header("State Machine")]
@@ -48,6 +62,7 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
     private float sqrDetectionRange;
     private float startTime;
     private Vector2 basePosition;
+    private float targetHealth = 100f;
 
     private void Awake()
     {
@@ -66,7 +81,8 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
         {
-            player = playerObj.transform;
+            playerTransform = playerObj.transform;
+            player = playerObj.GetComponent<Hero2>();
         }
         sqrDetectionRange = detectionRange * detectionRange;
         startTime = Time.time;
@@ -77,6 +93,7 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
     {
         ChangeState(patrolState);
         animator.SetInteger("state", 1);
+        maxTransform = healthBar.transform.localScale.x;
     }
 
     private void Update()
@@ -94,12 +111,12 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
 
     public bool CanSeePlayer()
     {
-        if (player == null) return false;
+        if (playerTransform == null) return false;
 
-        float sqrDistToPlayer = (transform.position - player.position).sqrMagnitude;
+        float sqrDistToPlayer = (transform.position - playerTransform.position).sqrMagnitude;
         if (sqrDistToPlayer > sqrDetectionRange) return false;
 
-        Vector2 dirToPlayer = (player.position - transform.position).normalized;
+        Vector2 dirToPlayer = (playerTransform.position - transform.position).normalized;
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dirToPlayer, detectionRange, obstacleLayer);
 
         return hit.collider == null;
@@ -107,9 +124,9 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
 
     public bool IsPlayerInAttackRange()
     {
-        if (player == null) return false;
+        if (playerTransform == null) return false;
 
-        return Vector2.Distance(transform.position, player.position) <= attackRange;
+        return Vector2.Distance(transform.position, playerTransform.position) <= attackRange;
     }
 
     public Vector2 GetAvoidanceDirection(Vector2 targetDirection)
@@ -156,7 +173,7 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
         if (direction.x >= 0.1f)
         {
             transform.localScale = new Vector3(1, 1, 1);
-        } 
+        }
         else if (direction.x < -0.1f)
         {
             transform.localScale = new Vector3(-1, 1, 1);
@@ -177,6 +194,15 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         ChangeState(hitState);
+        currentHealth = Mathf.Max(currentHealth - damage, 0);
+        targetHealth = currentHealth / 100f * maxHealth;
+
+        if (currentHealth == 0)
+        {
+            animator.SetInteger("state", 5);
+            rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.down, Time.fixedDeltaTime * 10f);
+            Destroy(gameObject, 2f);
+        }
     }
 
     public void Stop()

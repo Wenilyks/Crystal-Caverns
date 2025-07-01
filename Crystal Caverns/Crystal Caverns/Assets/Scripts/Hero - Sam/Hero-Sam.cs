@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum States
 {
@@ -17,14 +20,30 @@ public enum States
 
 public class Hero2 : MonoBehaviour
 {
+    [Header("Player stats")]
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float currentHealth = 100f;
+    [SerializeField] private float maxMagicAura = 100f;
+    [SerializeField] private float currentMagicAura = 100f;
+    [SerializeField] private float magicRegenRate = 5f;
     [SerializeField] private float speed = 3f;
     [SerializeField] private int lives = 5;
-    [SerializeField] private float health = 100;
     [SerializeField] private float jumpForce = 10f;
-    [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private Transform spriteHolder2;
-    [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.2f;
+
+    [Header("UI")]
+    [SerializeField] private Image healthBar;
+    [SerializeField] private Image magicAuraBar;
+    [SerializeField] private TMP_Text healthText;
+    [SerializeField] private TMP_Text magicAuraText;
+
+    [Header("Animation settings")]
+    [SerializeField] private float barAnimationSpeed = 0.1f;
+    [SerializeField] private float barAnimationDuration = 0.5f;
+
+    private float targetHealthValue = 1f;
+    private float targetMagicValue = 1f;
+
 
     [Header("Combat")]
     [SerializeField] private GameObject fireballPrefab;
@@ -37,11 +56,19 @@ public class Hero2 : MonoBehaviour
     [SerializeField] private float rainHeight = 3f;
     [SerializeField] private float groundPoundRadius = 3f;
     [SerializeField] private int groundPoundDamage = 25;
+    [SerializeField] private float fireballMagicCost = 20f;
+    [SerializeField] private float rainFireballMagicCost = 25f;
+    [SerializeField] private float groundPoundMagicCost = 25f;
     [SerializeField] private LayerMask enemyLayer;
 
     [Header("Effects")]
     [SerializeField] private GameObject groundPoundEffect;
     [SerializeField] private ParticleSystem magicAura;
+
+    [Header("References")]
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private Transform spriteHolder2;
+    [SerializeField] private Transform groundCheck;
 
     private bool isGrounded = false;
     private bool canAttack = true;
@@ -65,6 +92,13 @@ public class Hero2 : MonoBehaviour
         anim = spriteHolder2.GetComponent<Animator>();
     }
 
+    private void Start()
+    {
+        if (healthBar != null) healthBar.fillAmount = 1f;
+        if (magicAuraBar != null) magicAuraBar.fillAmount = 1f;
+        UpdateTexts();
+    }
+
     private void FixedUpdate()
     {
         CheckGround();
@@ -72,6 +106,7 @@ public class Hero2 : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(currentMagicAura);
         if (isGrounded && !isAttacking && !isGettingHit)
         {
             Debug.Log("Idle state lol");
@@ -86,12 +121,29 @@ public class Hero2 : MonoBehaviour
                 Jump();
         }
 
+        if (currentMagicAura < maxMagicAura)
+        {
+            currentMagicAura += magicRegenRate * Time.deltaTime;
+            currentMagicAura = Mathf.Clamp(currentMagicAura, 0, maxMagicAura);
+            targetMagicValue = currentMagicAura / maxMagicAura;
+        }
+
+        if (healthBar != null)
+        {
+            healthBar.DOFillAmount(targetHealthValue, barAnimationDuration);
+        }
+
+        if (magicAuraBar != null)
+        {
+            magicAuraBar.DOFillAmount(targetMagicValue, barAnimationDuration);  
+        }
 
         if (canAttack)
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 State = States.idle;
+                if (!(currentMagicAura >= fireballMagicCost)) return;
                 isAttacking = true;
                 canAttack = false;
                 State = States.attackTwo;
@@ -99,6 +151,7 @@ public class Hero2 : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.X))
             {
+                if (!(currentMagicAura >= rainFireballMagicCost)) return;
                 isAttacking = true;
                 canAttack = false;
                 State = States.attackOne;
@@ -106,15 +159,35 @@ public class Hero2 : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.C))
             {
+                if (!(currentMagicAura >= groundPoundMagicCost)) return;
                 isAttacking = true;
                 canAttack = false;
                 State = States.attackThree;
                 StartCoroutine(PerformAttack(States.attackThree));
             }
         }
-
+        UpdateTexts();
     }
 
+    public void RestoreMagic(float magicAmount)
+    {
+        currentMagicAura += magicAmount;
+        currentMagicAura = Mathf.Clamp(currentMagicAura, 0, maxMagicAura);
+        targetMagicValue = currentMagicAura / maxMagicAura;
+    }
+
+    private void UpdateTexts()
+    {
+        if (healthText != null)
+        {
+            healthText.text = $"{(int)currentHealth} / {(int)maxHealth}";
+        }
+
+        if (magicAuraText != null)
+        {
+            magicAuraText.text = $"{(int)currentMagicAura} / {(int)maxMagicAura}";
+        }
+    }
     private void Run()
     {
         if (isGrounded) State = States.run;
@@ -150,6 +223,7 @@ public class Hero2 : MonoBehaviour
             float animationLength = GetAnimationLength(attackType) / 1.7f;
             yield return new WaitForSeconds(animationLength);
             SpawnFireball();
+            currentMagicAura -= fireballMagicCost;
         }
 
         else if (attackType == States.attackOne)
@@ -157,6 +231,7 @@ public class Hero2 : MonoBehaviour
             float animationLength = GetAnimationLength(attackType);
             yield return new WaitForSeconds(animationLength);
             StartCoroutine(SpawnFireballRain());
+            currentMagicAura -= rainFireballMagicCost;
         }
 
         else if (attackType == States.attackThree)
@@ -164,6 +239,7 @@ public class Hero2 : MonoBehaviour
             float animationLength = GetAnimationLength(attackType);
             yield return new WaitForSeconds(animationLength);
             StartCoroutine(GroundPound());
+            currentMagicAura -= groundPoundMagicCost;
         }
 
         isAttacking = false;
@@ -273,15 +349,17 @@ public class Hero2 : MonoBehaviour
 
         Debug.Log("Player is taking damage");
 
-        health = Mathf.Max(health - damage, 0);
+        currentHealth = Mathf.Max(currentHealth - damage, 0);
+        targetHealthValue = currentHealth / maxHealth;
+        StartCoroutine(TakeDamage());
+        Update();
 
-        if (health == 0)
+        if (currentHealth == 0)
         {
             Destroy(gameObject);
             return;
         }
 
-        StartCoroutine(TakeDamage());
     }
 
     private IEnumerator TakeDamage()

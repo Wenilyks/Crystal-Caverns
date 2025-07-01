@@ -20,7 +20,7 @@ public class FlyingChaseState : FlyingEnemyState
 
     public override void Update()
     {
-        if (enemy.player == null) return;
+        if (enemy.playerTransform == null) return;
         if (enemy.IsPlayerInAttackRange())
         {
             // change state to attack
@@ -30,7 +30,7 @@ public class FlyingChaseState : FlyingEnemyState
 
         if (enemy.CanSeePlayer())
         {
-            Vector2 playerPosition = enemy.player.position;
+            Vector2 playerPosition = enemy.playerTransform.position;
 
             Vector2 targetPosition = new Vector2(playerPosition.x, playerPosition.y + 1f);
             enemy.FlyTowards(targetPosition, enemy.chaseSpeed);
@@ -47,7 +47,7 @@ public class FlyingChaseState : FlyingEnemyState
                 return;
             }
 
-            enemy.FlyTowards(enemy.player.position, enemy.chaseSpeed);
+            enemy.FlyTowards(enemy.playerTransform.position, enemy.chaseSpeed);
         }
     }
 
@@ -58,10 +58,10 @@ public class FlyingChaseState : FlyingEnemyState
 
     public override void OnDrawGizmos()
     {
-        if (enemy.player != null)
+        if (enemy.playerTransform != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(enemy.transform.position, enemy.player.position);
+            Gizmos.DrawLine(enemy.transform.position, enemy.playerTransform.position);
         }
     }
 }
