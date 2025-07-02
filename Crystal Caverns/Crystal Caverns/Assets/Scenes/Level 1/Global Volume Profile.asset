@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.Vignette
   active: 1
   color:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: {r: 0, g: 0, b: 0, a: 1}
   center:
     m_OverrideState: 0
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.325
+    m_Value: 0.186
   smoothness:
     m_OverrideState: 1
-    m_Value: 0.159
+    m_Value: 1
   rounded:
     m_OverrideState: 1
     m_Value: 1
@@ -58,7 +58,7 @@ MonoBehaviour:
     m_Value: 65472
   tint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 0.6433962, b: 0.40566033, a: 1}
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
   highQualityFiltering:
     m_OverrideState: 0
     m_Value: 0
@@ -90,13 +90,13 @@ MonoBehaviour:
   active: 1
   lift:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 0.9831205, y: 1, z: 0.9968181, w: 0}
   gamma:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 0.91035277, z: 0.7227202, w: 0.07048453}
+    m_Value: {x: 0.92354405, y: 1, z: 0.87497044, w: 0.07048453}
   gain:
     m_OverrideState: 1
-    m_Value: {x: 0.7068159, y: 0.7597866, z: 1, w: -0.03524243}
+    m_Value: {x: 0.81524485, y: 0.8634778, z: 1, w: -0.03524243}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,13 +150,13 @@ MonoBehaviour:
   active: 1
   shadows:
     m_OverrideState: 1
-    m_Value: {x: 0.90074843, y: 0.9128313, z: 1, w: -6.492094e-10}
+    m_Value: {x: 0.987316, y: 1, z: 0.9927844, w: -6.492094e-10}
   midtones:
     m_OverrideState: 1
-    m_Value: {x: 0.85132253, y: 0.69546485, z: 1, w: 0.14096905}
+    m_Value: {x: 0.62170124, y: 0.5668141, z: 1, w: 0.14096905}
   highlights:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 0.84045815, z: 0.9881966, w: 0.493392}
+    m_Value: {x: 0.7950818, y: 0.919515, z: 1, w: 0.493392}
   shadowsStart:
     m_OverrideState: 1
     m_Value: 0
