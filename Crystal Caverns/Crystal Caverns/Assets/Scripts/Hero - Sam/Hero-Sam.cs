@@ -332,8 +332,10 @@ public class Hero2 : MonoBehaviour
         foreach (Collider2D enemy in hitEnemies)
         {
             Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
+            IDamageable enemyScript = enemy.GetComponent<IDamageable>();
             if (enemyRb != null)
             {
+                enemyScript.TakeDamage(groundPoundDamage);
                 Vector2 knowbackDirection = (enemy.transform.position - transform.position).normalized;
                 enemyRb.AddForce(knowbackDirection * 40, ForceMode2D.Impulse);
             }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour, IDamageable
 {
@@ -20,7 +22,13 @@ public class EnemyController : MonoBehaviour, IDamageable
     [Header("Combat")]
     public float attackDamage = 10f;
     public float attackCooldown = 1f;
-    public float health = 100;
+    public float currentHealth = 100f;
+    public float maxHealth = 100f;
+    public float targetHealth = 100f;
+
+    [Header("UI")]
+    [SerializeField] private Slider healthBar;
+    [SerializeField] private float barAnimationSpeed = 0.7f;
 
     [Header("Jumping")]
     public float jumpForce = 10f;
@@ -78,6 +86,9 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     private void Update()
     {
+        healthBar.value = Mathf.Lerp(healthBar.value, targetHealth, barAnimationSpeed * Time.deltaTime);
+        if (currentHealth == 0) return;
+        Debug.Log($"Changing the healthbar value to {targetHealth}");
         currentState?.Update();
     }
 
@@ -197,19 +208,32 @@ public class EnemyController : MonoBehaviour, IDamageable
         rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, targetVelocity, Time.fixedDeltaTime * 10f);
 
         if (direction.x > 0.1f)
+        {
             transform.localScale = new Vector3(1, 1, 1);
+            healthBar.direction = Slider.Direction.LeftToRight;
+        }
         else if (direction.x < -0.1f)
+        {
             transform.localScale = new Vector3(-1, 1, 1);
+            healthBar.direction = Slider.Direction.RightToLeft;
+        }
     }
 
     public void TakeDamage(float damage)
     {
-        health = Mathf.Max(health - damage, 0);
-        if (health == 0)
-        {
-            Destroy(gameObject);
-        }
         ChangeState(hitState);
+        currentHealth = Mathf.Max(currentHealth - damage, 0);
+        targetHealth = currentHealth / maxHealth;
+        Debug.Log($"target health is {targetHealth}");
+
+        if (currentHealth == 0)
+        {
+            Destroy(gameObject, 1f);
+        }
+        else
+        {
+            ChangeState(hitState);
+        }
     }
 
     public void Stop()

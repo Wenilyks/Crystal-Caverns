@@ -11,7 +11,7 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
     [SerializeField] private float currentHealth = 100f;
 
     [Header("UI")]
-    [SerializeField] private RectTransform healthBar;
+    [SerializeField] private Slider healthBar;
     [SerializeField] private float maxTransform;
 
     [Header("Animation settings")]
@@ -53,7 +53,7 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
     public FlyingChaseState chaseState { get; private set; }
     public FlyingAttackState attackState { get; private set; }  
     public FlyingHitState hitState { get; private set; }
-
+    public FlyingDeathState deathState { get; private set; }
 
     public string currentStateString = "patroleState";
     public int currentPatrolIndex = 0;
@@ -75,7 +75,8 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
         patrolState = new FlyingPatrolState(this);
         chaseState = new FlyingChaseState(this);
         attackState = new FlyingAttackState(this);
-        hitState = new FlyingHitState(this);    
+        hitState = new FlyingHitState(this);
+        deathState = new FlyingDeathState(this);
         
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -98,6 +99,8 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
 
     private void Update()
     {
+        if (currentHealth <= 0 && currentState != deathState) return;
+        healthBar.value = Mathf.Lerp(healthBar.value, targetHealth, barAnimationSpeed);
         currentState?.Update();
     }
 
@@ -173,10 +176,12 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
         if (direction.x >= 0.1f)
         {
             transform.localScale = new Vector3(1, 1, 1);
+            healthBar.direction = Slider.Direction.LeftToRight;
         }
         else if (direction.x < -0.1f)
         {
             transform.localScale = new Vector3(-1, 1, 1);
+            healthBar.direction = Slider.Direction.RightToLeft;
         }
     }
 
@@ -195,13 +200,16 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
     {
         ChangeState(hitState);
         currentHealth = Mathf.Max(currentHealth - damage, 0);
-        targetHealth = currentHealth / 100f * maxHealth;
+        targetHealth = currentHealth / 100f;
 
         if (currentHealth == 0)
         {
-            animator.SetInteger("state", 5);
-            rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.down, Time.fixedDeltaTime * 10f);
-            Destroy(gameObject, 2f);
+            ChangeState(deathState);
+            Destroy(gameObject, 1f);
+        }
+        else
+        {
+            ChangeState(hitState);
         }
     }
 
