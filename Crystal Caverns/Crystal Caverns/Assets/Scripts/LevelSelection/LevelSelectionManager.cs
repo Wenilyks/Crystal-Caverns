@@ -316,6 +316,7 @@ public class MapSelectionManager : MonoBehaviour
             }
 
             PlaySound(buttonClickSound);
+            AudioManager.Instance.PlayMusic("Level 1 theme");
 
             StartCoroutine(LoadMapWithTransition(currentMap.sceneName));
         }

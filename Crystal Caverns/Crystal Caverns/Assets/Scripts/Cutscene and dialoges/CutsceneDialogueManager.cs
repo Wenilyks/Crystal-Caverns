@@ -10,8 +10,8 @@ public class DialogueLine
 {
     public string characterName;
     public string dialogueText;
-    public Sprite characterSprite; 
-    public Sprite villianSprite;
+    public Sprite characterSprite;
+    public Sprite villainSprite;
     public float typingSpeed = 0.05f;
     public bool waitForInput = true;
 }
@@ -28,12 +28,16 @@ public class CutsceneDialogueManager : MonoBehaviour
     [Header("UI References")]
     public GameObject dialoguePanel;
     public TextMeshProUGUI characterNameText;
-    public TextMeshProUGUI villianNameText;
+    public TextMeshProUGUI villainNameText;
     public TextMeshProUGUI dialogueText;
     public Image characterPortrait;
-    public Image villianPortrait;
+    public Image villainPortrait;
     public Button continueButton;
     public GameObject continuePrompt;
+
+    [Header("Character Sprites")]
+    public Sprite heroSprite;
+    public Sprite shadowLordSprite;
 
     [Header("Dialogue Data")]
     public DialogueSequence currentSequence;
@@ -41,6 +45,7 @@ public class CutsceneDialogueManager : MonoBehaviour
     [Header("Settings")]
     public float defaultTypingSpeed = 0.05f;
     public bool canSkipTyping = true;
+    public bool pauseGameDuringDialogue = true;
 
     private int currentLineIndex = 0;
     private bool isTyping = false;
@@ -65,7 +70,7 @@ public class CutsceneDialogueManager : MonoBehaviour
 
     void Update()
     {
-        if (isDialogueActive && Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+        if (isDialogueActive && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0)))
         {
             if (isTyping && canSkipTyping)
             {
@@ -87,6 +92,11 @@ public class CutsceneDialogueManager : MonoBehaviour
         if (dialoguePanel != null)
             dialoguePanel.SetActive(true);
 
+        if (pauseGameDuringDialogue)
+        {
+            Time.timeScale = 0f;
+        }
+
         OnDialogueStart?.Invoke();
         DisplayCurrentLine();
     }
@@ -101,50 +111,50 @@ public class CutsceneDialogueManager : MonoBehaviour
                 new DialogueLine
                 {
                     characterName = "Shadow Lord",
-                    dialogueText = "Lol, whe tf is this?"
+                    dialogueText = "Lol, where tf is this?",
+                    villainSprite = shadowLordSprite
                 },
                 new DialogueLine
                 {
                     characterName = "Hero",
                     dialogueText = "Yo. What is your favourite anime?",
                     typingSpeed = 0.03f,
-                    characterSprite = characterPortrait.sprite,
-
+                    characterSprite = heroSprite
                 },
                 new DialogueLine
                 {
                     characterName = "Shadow Lord",
                     dialogueText = "I kind of like bleach and rent a girlfriend.",
                     typingSpeed = 0.04f,
-                    villianSprite = villianPortrait.sprite
+                    villainSprite = shadowLordSprite
                 },
                 new DialogueLine
                 {
                     characterName = "Hero",
                     dialogueText = "Mid.",
                     typingSpeed = 0.03f,
-                    characterSprite = characterPortrait.sprite,
+                    characterSprite = heroSprite
                 },
                 new DialogueLine
                 {
                     characterName = "Shadow Lord",
                     dialogueText = "I am gonna destroy you.",
                     typingSpeed = 0.04f,
-                    villianSprite = villianPortrait.sprite
+                    villainSprite = shadowLordSprite
                 },
                 new DialogueLine
                 {
                     characterName = "Hero",
                     dialogueText = "Lol",
                     typingSpeed = 0.03f,
-                    characterSprite = characterPortrait.sprite,
+                    characterSprite = heroSprite
                 },
                 new DialogueLine
                 {
                     characterName = "Shadow Lord",
                     dialogueText = "Prepare to meet your doom, little hero!",
                     typingSpeed = 0.04f,
-                    villianSprite = villianPortrait.sprite
+                    villainSprite = shadowLordSprite
                 }
             }
         };
@@ -165,24 +175,38 @@ public class CutsceneDialogueManager : MonoBehaviour
         if (characterNameText != null)
             characterNameText.text = currentLine.characterName;
 
-        if (characterPortrait != null && currentLine.characterSprite != null)
+        if (characterPortrait != null)
         {
-            characterPortrait.sprite = currentLine.characterSprite;
-            characterPortrait.gameObject.SetActive(true);
-        }
-        else
-        {
-            characterPortrait.gameObject.SetActive(false);
+            if (currentLine.characterSprite != null)
+            {
+                characterPortrait.sprite = currentLine.characterSprite;
+                characterPortrait.gameObject.SetActive(true);
+            }
+            else
+            {
+                characterPortrait.gameObject.SetActive(false);
+            }
         }
 
-        if (villianPortrait != null && currentLine.villianSprite != null)
+        if (villainPortrait != null)
         {
-            villianPortrait.sprite = currentLine.villianSprite;
-            villianPortrait.gameObject.SetActive(true);
+            if (currentLine.villainSprite != null)
+            {
+                villainPortrait.sprite = currentLine.villainSprite;
+                villainPortrait.gameObject.SetActive(true);
+            }
+            else
+            {
+                villainPortrait.gameObject.SetActive(false);
+            }
         }
-        else
+
+        if (villainNameText != null)
         {
-            villianPortrait.gameObject.SetActive(false);
+            if (currentLine.villainSprite != null)
+                villainNameText.text = currentLine.characterName;
+            else
+                villainNameText.text = "";
         }
 
         if (continuePrompt != null)
@@ -204,7 +228,7 @@ public class CutsceneDialogueManager : MonoBehaviour
         foreach (char c in text)
         {
             dialogueText.text += c;
-            yield return new WaitForSeconds(speed);
+            yield return new WaitForSecondsRealtime(speed);
         }
 
         isTyping = false;
@@ -243,8 +267,14 @@ public class CutsceneDialogueManager : MonoBehaviour
     {
         isDialogueActive = false;
 
+        CameraController cameraController = Camera.main.GetComponent<CameraController>();
+        if (cameraController != null)
+            cameraController.UnmoveCamera();
+
         if (dialoguePanel != null)
             dialoguePanel.SetActive(false);
+
+        Time.timeScale = 1f;
 
         OnDialogueEnd?.Invoke();
     }

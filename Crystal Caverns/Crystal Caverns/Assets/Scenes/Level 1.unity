@@ -6942,7 +6942,7 @@ ParticleSystem:
   looping: 1
   prewarm: 0
   playOnAwake: 1
-  useUnscaledTime: 0
+  useUnscaledTime: 1
   autoRandomSeed: 1
   startDelay:
     serializedVersion: 2
@@ -12426,9 +12426,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   player: {fileID: 1681797490}
   minX: -10
-  maxX: 200
+  maxX: 1000
   minY: -200
   maxY: 70
+  followSpeed: 5
+  moveCameraOffest: {x: 10, y: 0}
 --- !u!1 &534614146
 GameObject:
   m_ObjectHideFlags: 0
@@ -12658,7 +12660,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &539401385
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12671,6 +12673,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 788149111}
   - {fileID: 570619677}
   - {fileID: 1594822027}
   - {fileID: 1393315788}
@@ -12742,7 +12745,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 11
   m_TargetDisplay: 0
 --- !u!1 &565984176
 GameObject:
@@ -13462,7 +13465,7 @@ ParticleSystem:
   looping: 1
   prewarm: 0
   playOnAwake: 1
-  useUnscaledTime: 0
+  useUnscaledTime: 1
   autoRandomSeed: 1
   startDelay:
     serializedVersion: 2
@@ -19274,6 +19277,81 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxLayer
   target: {fileID: 1681797490}
   parallaxMultiplier: 0.05
+--- !u!1 &788149110
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 788149111}
+  - component: {fileID: 788149113}
+  - component: {fileID: 788149112}
+  m_Layer: 5
+  m_Name: Blur
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &788149111
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 788149110}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 539401385}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &788149112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 788149110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.42745098}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &788149113
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 788149110}
+  m_CullTransparentMesh: 1
 --- !u!1 &796514415
 GameObject:
   m_ObjectHideFlags: 0
@@ -224149,7 +224227,7 @@ ParticleSystem:
   looping: 1
   prewarm: 0
   playOnAwake: 1
-  useUnscaledTime: 0
+  useUnscaledTime: 1
   autoRandomSeed: 1
   startDelay:
     serializedVersion: 2
@@ -229512,18 +229590,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueManager
   dialoguePanel: {fileID: 539401384}
-  characterNameText: {fileID: 0}
-  villianNameText: {fileID: 0}
+  characterNameText: {fileID: 1051453469}
+  villainNameText: {fileID: 237123952}
   dialogueText: {fileID: 534614149}
   characterPortrait: {fileID: 570619679}
-  villianPortrait: {fileID: 1594822029}
+  villainPortrait: {fileID: 1594822029}
   continueButton: {fileID: 1014781722}
   continuePrompt: {fileID: 0}
+  heroSprite: {fileID: -7385789195546760866, guid: b5f13bf3d53d5944e904c7c0f5343ec0, type: 3}
+  shadowLordSprite: {fileID: 4723107735738678597, guid: 7e0d03d81fb5acd48ba042e0bf85ec6c, type: 3}
   currentSequence:
     sequenceName: 
     dialogueLines: []
   defaultTypingSpeed: 0.05
   canSkipTyping: 1
+  pauseGameDuringDialogue: 1
 --- !u!4 &1599715445
 Transform:
   m_ObjectHideFlags: 0
@@ -229629,7 +229710,7 @@ GameObject:
   - component: {fileID: 1605526181}
   - component: {fileID: 1605526183}
   - component: {fileID: 1605526182}
-  m_Layer: 30
+  m_Layer: 29
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -476129,7 +476210,7 @@ ParticleSystem:
   looping: 1
   prewarm: 0
   playOnAwake: 1
-  useUnscaledTime: 0
+  useUnscaledTime: 1
   autoRandomSeed: 1
   startDelay:
     serializedVersion: 2
@@ -483397,7 +483478,7 @@ GameObject:
   - component: {fileID: 2135007461}
   - component: {fileID: 2135007460}
   - component: {fileID: 2135007459}
-  m_Layer: 30
+  m_Layer: 29
   m_Name: BossEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -483565,7 +483646,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5025997688922811475, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 139.4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5025997688922811475, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -483730,6 +483811,10 @@ PrefabInstance:
     - target: {fileID: 8974411099646995212, guid: 6a052a4c934d8ec46a4e8cdce648545b, type: 3}
       propertyPath: m_Name
       value: Global Volume
+      objectReference: {fileID: 0}
+    - target: {fileID: 8974411099646995212, guid: 6a052a4c934d8ec46a4e8cdce648545b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

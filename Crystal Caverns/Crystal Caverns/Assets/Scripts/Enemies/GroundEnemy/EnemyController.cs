@@ -224,6 +224,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         ChangeState(hitState);
         currentHealth = Mathf.Max(currentHealth - damage, 0);
         targetHealth = currentHealth / maxHealth;
+        AudioManager.Instance.PlaySFX("Enemy hit");
         Debug.Log($"target health is {targetHealth}");
 
         if (currentHealth == 0)

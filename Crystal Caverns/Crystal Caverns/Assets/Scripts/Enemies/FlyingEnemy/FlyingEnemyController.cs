@@ -199,6 +199,7 @@ public class FlyingEnemyController : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         ChangeState(hitState);
+        AudioManager.Instance.PlaySFX("Enemy hit");
         currentHealth = Mathf.Max(currentHealth - damage, 0);
         targetHealth = currentHealth / 100f;
 

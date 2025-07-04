@@ -27,6 +27,14 @@ public class CutsceneTrigger : MonoBehaviour
 
     public void TriggerCutscene()
     {
+        CameraController cameraController = Camera.main.GetComponent<CameraController>();
+        if (cameraController != null)
+        {
+            Debug.Log("lol");
+            cameraController.MoveCamera();
+        }
+
+
         if (dialogueManager != null)
         {
             if (customSequence != null && customSequence.dialogueLines.Count > 0)

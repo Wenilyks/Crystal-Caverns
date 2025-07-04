@@ -488,6 +488,13 @@ MonoBehaviour:
     loop: 1
     playOnAwake: 1
     source: {fileID: 0}
+  - name: Level 1 theme
+    clip: {fileID: 8300000, guid: f3cfeffe508aa5c4b86a6f42a62c2f77, type: 3}
+    volume: 0.199
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
   musicFadeDuration: 1
   soundEffects:
   - name: Jump test
@@ -499,6 +506,13 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Button click
     clip: {fileID: 8300000, guid: 9445e27c2958baa45a6e0c4f53742a5c, type: 3}
+    volume: 0.522
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: Wizard attack 1
+    clip: {fileID: 8300000, guid: 91cd5f5bda823e04493756b972f71dcf, type: 3}
     volume: 0.522
     pitch: 1
     loop: 0

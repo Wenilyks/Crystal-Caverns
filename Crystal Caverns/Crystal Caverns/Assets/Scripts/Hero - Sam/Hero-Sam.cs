@@ -144,6 +144,7 @@ public class Hero2 : MonoBehaviour
             {
                 State = States.idle;
                 if (!(currentMagicAura >= fireballMagicCost)) return;
+                AudioManager.Instance.PlaySFX("Wizard attack 1");
                 isAttacking = true;
                 canAttack = false;
                 State = States.attackTwo;
@@ -160,6 +161,7 @@ public class Hero2 : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.C))
             {
                 if (!(currentMagicAura >= groundPoundMagicCost)) return;
+                AudioManager.Instance.PlaySFX("Ground pound");
                 isAttacking = true;
                 canAttack = false;
                 State = States.attackThree;
@@ -292,6 +294,7 @@ public class Hero2 : MonoBehaviour
                     0
                 );
 
+                AudioManager.Instance.PlaySFX("Magic sphere");
                 GameObject fireball = Instantiate(fireballPrefab2, spawnPoint, Quaternion.identity);
 
                 fireball.transform.localRotation = Quaternion.Euler(0, 0, -90f);
