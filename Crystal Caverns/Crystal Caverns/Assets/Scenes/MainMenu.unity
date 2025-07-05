@@ -489,6 +489,13 @@ MonoBehaviour:
     playOnAwake: 1
     source: {fileID: 0}
   - name: Level 1 theme
+    clip: {fileID: 8300000, guid: 111d571067079c743b778c8eb4f8b64a, type: 3}
+    volume: 0.199
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: Boss level 1 theme
     clip: {fileID: 8300000, guid: f3cfeffe508aa5c4b86a6f42a62c2f77, type: 3}
     volume: 0.199
     pitch: 1
@@ -497,9 +504,9 @@ MonoBehaviour:
     source: {fileID: 0}
   musicFadeDuration: 1
   soundEffects:
-  - name: Jump test
-    clip: {fileID: 8300000, guid: 25e55721a641e6944968d0c7742d6c43, type: 3}
-    volume: 0.522
+  - name: Jump
+    clip: {fileID: 8300000, guid: 5946cb10b8c29e64e95e28c990699918, type: 3}
+    volume: 0.821
     pitch: 1
     loop: 0
     playOnAwake: 0
@@ -512,13 +519,41 @@ MonoBehaviour:
     playOnAwake: 0
     source: {fileID: 0}
   - name: Wizard attack 1
-    clip: {fileID: 8300000, guid: 91cd5f5bda823e04493756b972f71dcf, type: 3}
+    clip: {fileID: 8300000, guid: 5946cb10b8c29e64e95e28c990699918, type: 3}
     volume: 0.522
     pitch: 1
     loop: 0
     playOnAwake: 0
     source: {fileID: 0}
-  sfxPoolSize: 10
+  - name: Magic sphere
+    clip: {fileID: 8300000, guid: 8dde3eed625a0b44681de5ecac51086d, type: 3}
+    volume: 0.522
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: Sphere explosion
+    clip: {fileID: 8300000, guid: deeafe3a5225c044e8e6771b7c21a7c7, type: 3}
+    volume: 0.522
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: Ground pound
+    clip: {fileID: 8300000, guid: e19e692b843d2f04997af7a5428ea635, type: 3}
+    volume: 0.522
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: Enemy hit
+    clip: {fileID: 8300000, guid: eac99ba9538e86d4697484f70a0437b5, type: 3}
+    volume: 0.795
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  sfxPoolSize: 11
   masterVolume: 1
   musicVolume: 1
   sfxVolume: 1

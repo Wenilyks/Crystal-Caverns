@@ -267,6 +267,8 @@ public class CutsceneDialogueManager : MonoBehaviour
     {
         isDialogueActive = false;
 
+        AudioManager.Instance.PlayMusic("Boss level 1 theme");
+
         CameraController cameraController = Camera.main.GetComponent<CameraController>();
         if (cameraController != null)
             cameraController.UnmoveCamera();

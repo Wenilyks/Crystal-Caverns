@@ -58,7 +58,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -96,7 +96,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -106,6 +106,45 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -928,8 +967,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f8562e4546bc6394392f02e71f970c94
-      internalID: -1353508935
+      spriteID: 6986cb4eb5e22ef4bb10e66f6284ba31
+      internalID: -225386540
       vertices: []
       indices: 
       edges: []
@@ -950,8 +989,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: da8d5f9a02c502f419d38e17441857ad
-      internalID: -1900583632
+      spriteID: 96bd294c861669f4c98d1a5388d2a4e0
+      internalID: 1506208457
       vertices: []
       indices: 
       edges: []
@@ -972,8 +1011,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: deb51a2251e18fe4cbdfba941c867ba3
-      internalID: -845717295
+      spriteID: 08b5ecef69efb9a4bbd4ea4066deb2cb
+      internalID: 1098462855
       vertices: []
       indices: 
       edges: []
@@ -994,8 +1033,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b2a4227a12fb7de45af779833ca414ca
-      internalID: -1096319692
+      spriteID: 6ac3050e92a592841ae60eac4f667544
+      internalID: 2061962630
       vertices: []
       indices: 
       edges: []
@@ -1016,8 +1055,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3fb85c7b242ee64448f82fdb1d49594c
-      internalID: 1108465344
+      spriteID: fa967332382fd864eb83e9af675886d4
+      internalID: -1553817552
       vertices: []
       indices: 
       edges: []
@@ -1038,8 +1077,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3da2ce7ad56bc8b41aa6c482d542943f
-      internalID: -1971387590
+      spriteID: c10e2d84bd749e540a80a184b9c03846
+      internalID: 1485804660
       vertices: []
       indices: 
       edges: []
@@ -1060,8 +1099,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a2c09a9420b498746bf7dde0b5311c9a
-      internalID: 2002321733
+      spriteID: 496b648209441f349a2602ed2faa9a66
+      internalID: -37695813
       vertices: []
       indices: 
       edges: []
@@ -1082,8 +1121,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f4cf266338e19be40ba68a1ba1636644
-      internalID: 992136426
+      spriteID: 9f80a4e1ed92fa24592cc9e901da3398
+      internalID: 185397426
       vertices: []
       indices: 
       edges: []
@@ -1104,8 +1143,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b8ed1f70e557eeb499813b6d4030a3d0
-      internalID: 677467056
+      spriteID: 76b6d73c410b2804b96b01c93eee8474
+      internalID: 304499067
       vertices: []
       indices: 
       edges: []
@@ -1126,8 +1165,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2de4981fa9375bc42b16971b921068f5
-      internalID: 1098588915
+      spriteID: 5a294ccdfa1fce54fab877fbebeb00e9
+      internalID: -1399965765
       vertices: []
       indices: 
       edges: []
@@ -1148,8 +1187,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3608a78b4179bb7499330384cdb49d58
-      internalID: 365266762
+      spriteID: ff05b20b202ff2941b91eb25e4d221e7
+      internalID: 1649049426
       vertices: []
       indices: 
       edges: []
@@ -1170,8 +1209,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a6a1eb597f810ce48a75f5851428ff2b
-      internalID: -35700060
+      spriteID: 2063c157d797aa849a7e1d23ba5f7a0a
+      internalID: -1867768255
       vertices: []
       indices: 
       edges: []
@@ -1192,8 +1231,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 35af939548321a8429a9ab379e12e523
-      internalID: -1842172504
+      spriteID: 6d22a050d05817840988ffb20a07649e
+      internalID: -2082146981
       vertices: []
       indices: 
       edges: []
@@ -1244,20 +1283,20 @@ TextureImporter:
       Mossy - TileSet_33: 1933515353
       Mossy - TileSet_34: 597542443
       Mossy - TileSet_35: 980157527
-      Mossy - TileSet_36: -1353508935
-      Mossy - TileSet_37: -1900583632
-      Mossy - TileSet_38: -845717295
-      Mossy - TileSet_39: -1096319692
+      Mossy - TileSet_36: -225386540
+      Mossy - TileSet_37: 1506208457
+      Mossy - TileSet_38: 1098462855
+      Mossy - TileSet_39: 2061962630
       Mossy - TileSet_4: 7789460486736427789
-      Mossy - TileSet_40: 1108465344
-      Mossy - TileSet_41: -1971387590
-      Mossy - TileSet_42: 2002321733
-      Mossy - TileSet_43: 992136426
-      Mossy - TileSet_44: 677467056
-      Mossy - TileSet_45: 1098588915
-      Mossy - TileSet_46: 365266762
-      Mossy - TileSet_47: -35700060
-      Mossy - TileSet_48: -1842172504
+      Mossy - TileSet_40: -1553817552
+      Mossy - TileSet_41: 1485804660
+      Mossy - TileSet_42: -37695813
+      Mossy - TileSet_43: 185397426
+      Mossy - TileSet_44: 304499067
+      Mossy - TileSet_45: -1399965765
+      Mossy - TileSet_46: 1649049426
+      Mossy - TileSet_47: -1867768255
+      Mossy - TileSet_48: -2082146981
       Mossy - TileSet_5: -2891453398403303555
       Mossy - TileSet_6: -418929144885664223
       Mossy - TileSet_7: -4372659424568917565
