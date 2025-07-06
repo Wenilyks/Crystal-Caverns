@@ -70,6 +70,11 @@ public class Hero2 : MonoBehaviour
     [SerializeField] private Transform spriteHolder2;
     [SerializeField] private Transform groundCheck;
 
+    [Header("Inventory")]
+    [SerializeField] private UI_Inventory UI_Inventory;
+
+    private Inventory inventory;
+
     private bool isGrounded = false;
     private bool canAttack = true;
     private bool isAttacking = false;
@@ -88,8 +93,20 @@ public class Hero2 : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        inventory = new Inventory();
         rb = GetComponent<Rigidbody2D>();
         anim = spriteHolder2.GetComponent<Animator>();
+        UI_Inventory.SetInventory(inventory);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        ItemWorld itemWorld = collision.GetComponent<ItemWorld>();
+        if (itemWorld != null)
+        {
+            inventory.AddItem(itemWorld.GetItem());
+            itemWorld.DestroySelf();
+        }
     }
 
     private void Start()
@@ -106,6 +123,11 @@ public class Hero2 : MonoBehaviour
 
     private void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            UI_Inventory.gameObject.SetActive(!UI_Inventory.gameObject.activeSelf);
+        }
         Debug.Log(currentMagicAura);
         if (isGrounded && !isAttacking && !isGettingHit)
         {
