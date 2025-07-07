@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 public class UI_Inventory : MonoBehaviour
@@ -10,10 +11,16 @@ public class UI_Inventory : MonoBehaviour
     {
         itemSlotContainer = transform.Find("ItemSlotContainer");
         itemSlotTemplate = itemSlotContainer.Find("ItemSlotTemplate");
+        if (itemSlotContainer == null)
+        {
+            Debug.Log("lol");
+        }
     }
 
     public void SetInventory(Inventory inventory)
     {
+        itemSlotContainer = transform.Find("ItemSlotContainer");
+        itemSlotTemplate = itemSlotContainer.Find("ItemSlotTemplate");
         this.inventory = inventory;
         inventory.OnItemListChanged += () => RefreshInventoryItems();
 
@@ -22,7 +29,7 @@ public class UI_Inventory : MonoBehaviour
 
     public void RefreshInventoryItems()
     {
-        foreach(Transform child in itemSlotContainer)
+        foreach (Transform child in itemSlotContainer)
         {
             if (child == itemSlotTemplate)
             {
@@ -45,7 +52,15 @@ public class UI_Inventory : MonoBehaviour
             itemSlotRectTransform.anchoredPosition = new Vector2(x * itemSlotCellSizeX, y * itemSlotCellSizeY * -1);
             Image image = itemSlotRectTransform.GetComponent<Image>();
 
-            image.sprite = item.GetSprite();
+            TextMeshProUGUI uiText = itemSlotRectTransform.Find("ItemAmountTxt").GetComponent<TextMeshProUGUI>();
+            if (uiText != null)
+                Debug.Log("it is fine");
+            if (item.amount > 1)
+                uiText.SetText(item.amount.ToString());
+            else
+                uiText.SetText("");
+
+                image.sprite = item.GetSprite();
             x++;
 
             if (x > 3)

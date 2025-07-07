@@ -47,4 +47,22 @@ public class Item
         }
     }
 
+    public bool IsStackable()
+    {
+        switch (itemType)
+        {
+            default:
+            case ItemType.Coins:
+            case ItemType.HealthPotion:
+            case ItemType.StrengthPotion:
+            case ItemType.JumpPotion:
+            case ItemType.SpeedPotion:
+            case ItemType.ManaPotion:
+                return true;
+            case ItemType.StrengthRing:
+            case ItemType.ManaRing:
+            case ItemType.HealthRing:
+                return false;
+        }
+    }
 }

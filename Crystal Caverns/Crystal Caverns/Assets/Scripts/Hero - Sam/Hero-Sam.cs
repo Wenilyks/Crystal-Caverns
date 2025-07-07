@@ -96,7 +96,6 @@ public class Hero2 : MonoBehaviour
         inventory = new Inventory();
         rb = GetComponent<Rigidbody2D>();
         anim = spriteHolder2.GetComponent<Animator>();
-        UI_Inventory.SetInventory(inventory);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -111,6 +110,7 @@ public class Hero2 : MonoBehaviour
 
     private void Start()
     {
+        UI_Inventory.SetInventory(inventory);
         if (healthBar != null) healthBar.fillAmount = 1f;
         if (magicAuraBar != null) magicAuraBar.fillAmount = 1f;
         UpdateTexts();
