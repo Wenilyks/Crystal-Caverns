@@ -72,6 +72,7 @@ public class Hero2 : MonoBehaviour
 
     [Header("Inventory")]
     [SerializeField] private UI_Inventory UI_Inventory;
+    [SerializeField] private Transform positionToDrop;
 
     private Inventory inventory;
 
@@ -127,7 +128,28 @@ public class Hero2 : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             UI_Inventory.gameObject.SetActive(!UI_Inventory.gameObject.activeSelf);
+            if (UI_Inventory.gameObject.activeSelf)
+            {
+                UI_Inventory.RefreshInventoryItems();
+            }
         }
+
+        if (UI_Inventory.gameObject.activeSelf && Input.GetKeyDown(KeyCode.Q) && UI_Inventory.GetSelectedItem() != null){
+            Item itemToDrop = UI_Inventory.GetSelectedItem();
+            inventory.RemoveItem(itemToDrop.itemType, 1);
+            var dropItem = new Item()
+            {
+                itemType = itemToDrop.itemType,
+                amount = 1
+            };
+            ItemWorld.SpawnItemWorld(positionToDrop.position, dropItem, dropItem.amount);
+        }
+
+        if (UI_Inventory.gameObject.activeSelf && Input.GetKeyDown(KeyCode.R) && UI_Inventory.GetSelectedItem() != null)
+        {
+            UseItem(UI_Inventory.GetSelectedItem());
+        }
+
         Debug.Log(currentMagicAura);
         if (isGrounded && !isAttacking && !isGettingHit)
         {
@@ -193,6 +215,25 @@ public class Hero2 : MonoBehaviour
         UpdateTexts();
     }
 
+    private void UseItem(Item item)
+    {
+        switch (item.itemType)
+        {
+            case Item.ItemType.HealthPotion:
+                currentHealth += 20;
+                targetHealthValue = currentHealth / maxHealth;
+                if (currentHealth > 100) currentHealth = 100;
+                inventory.RemoveItem(item.itemType);
+                break;
+
+            case Item.ItemType.ManaPotion:
+                currentMagicAura += 20;
+                targetMagicValue = currentMagicAura / maxMagicAura;
+                if (currentMagicAura > 100) currentMagicAura = 100;
+                inventory.RemoveItem(item.itemType);
+                break;
+        }
+    }
     public void RestoreMagic(float magicAmount)
     {
         currentMagicAura += magicAmount;
