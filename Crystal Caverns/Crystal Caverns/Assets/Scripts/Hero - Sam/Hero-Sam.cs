@@ -107,6 +107,12 @@ public class Hero2 : MonoBehaviour
             inventory.AddItem(itemWorld.GetItem());
             itemWorld.DestroySelf();
         }
+
+        Chest chest = collision.GetComponent<Chest>();
+        if (chest != null)
+        {
+            chest.OpenChest();
+        }
     }
 
     private void Start()
