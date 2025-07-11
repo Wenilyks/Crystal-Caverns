@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2778089279451990900
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5955696991760447256}
+  - component: {fileID: 4030993852864237356}
+  m_Layer: 0
+  m_Name: ItemAssets
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5955696991760447256
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2778089279451990900}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1233.7064, y: 549.7438, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4030993852864237356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2778089279451990900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e506839ed9439f547823fb881eeef866, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemAssets
+  pfItemWorld: {fileID: 7500229759588336804, guid: 4cc24f886de4f7d49af22b0e80b01e5d, type: 3}
+  healthPotionSprite: {fileID: 1799121946817344791, guid: fb249afeb0ff95a438e6aec12fdf762c, type: 3}
+  strengthPotionSprite: {fileID: 6953660632073496425, guid: 56aebb836b0170347aec9555b2bf39b4, type: 3}
+  speedPotionSprite: {fileID: -1401110133662507876, guid: 9035a2602b4b6774fb8c30b4f5872fca, type: 3}
+  jumpPotionSprite: {fileID: -4287490094684504928, guid: 0f4822a250166e94aaf8a8daaaa7c170, type: 3}
+  manaPotionSprite: {fileID: 0}
+  healthRegenerationRingSprite: {fileID: 0}
+  manaRegenrationRingSprite: {fileID: 0}
+  speedRingSprite: {fileID: 0}
+  strengthRingSprite: {fileID: 0}
+  protectionRingSprite: {fileID: 0}
+  coinSprite: {fileID: 0}
