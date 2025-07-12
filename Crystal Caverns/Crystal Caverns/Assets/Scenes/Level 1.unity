@@ -230115,7 +230115,7 @@ Animator:
   m_GameObject: {fileID: 1605526180}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: d8f0559dea8f0724f8ddfc6a56d34b4b, type: 2}
+  m_Controller: {fileID: 9100000, guid: fe3da8d7e94c0fb4fb207bc865f10b00, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -481303,6 +481303,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1841593090
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1841593091}
+  m_Layer: 29
+  m_Name: fire position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1841593091
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841593090}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.63, y: 0.25, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2135007461}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1851778734
 GameObject:
   m_ObjectHideFlags: 0
@@ -483987,6 +484018,7 @@ GameObject:
   - component: {fileID: 2135007461}
   - component: {fileID: 2135007460}
   - component: {fileID: 2135007459}
+  - component: {fileID: 2135007462}
   m_Layer: 29
   m_Name: BossEnemy
   m_TagString: Untagged
@@ -484081,8 +484113,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1605526181}
+  - {fileID: 1841593091}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2135007462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2135007458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c7986bc2f9da094b96716d6f76fa7ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FireWizardBossController
+  maxHealth: 100
+  currentHealth: 0
+  moveSpeed: 2
+  attackRange: 5
+  fireHandsRange: 2
+  attackCooldown: 2
+  fireHandsDamage: 20
+  fireballDamage: 15
+  fireballRainDamage: 10
+  player: {fileID: 1681797490}
+  fireballPrefab: {fileID: 6845201832380516912, guid: cc7ada67534eacb48a85c8e758c97cb9, type: 3}
+  firePoint: {fileID: 1841593091}
+  rb: {fileID: 0}
+  animator: {fileID: 0}
+  lastAttackTime: 0
+  isAttacking: 0
 --- !u!1 &2147112776
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class Fireball : MonoBehaviour
 {
@@ -22,17 +23,21 @@ public class Fireball : MonoBehaviour
     private Transform targetEnemy;
     private bool aim = false;
 
+    private Transform specificTarget;
+    private string specificTargetTag;
+
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();   
     }
 
-    public void Initialize(float speed, float direction, bool aim)
+    public void Initialize(float speed, float direction, bool aim, Transform specificTarget = null)
     {
         currentSpeed = speed;
         initialDirection = direction;
         this.aim = aim;
+        this.specificTarget = specificTarget;   
 
         if (rb != null)
         {
@@ -44,7 +49,13 @@ public class Fireball : MonoBehaviour
     {
         if (hasExploded || rb == null || !aim) return;
 
-        FindNearestEnemy();
+        if (specificTarget == null)
+            FindNearestEnemy();
+        else
+        {
+            targetEnemy = specificTarget;
+            specificTargetTag = specificTarget.gameObject.tag;
+        }
 
         if (targetEnemy != null)
         {
@@ -62,7 +73,7 @@ public class Fireball : MonoBehaviour
         if (hasExploded) return;
 
         int layer = collision.gameObject.layer;
-        if (((1 << layer) & enemyLayer) != 0 || ((1 << layer) & groundLayer) != 0)
+        if (((1 << layer) & enemyLayer) != 0 || ((1 << layer) & groundLayer) != 0 || collision.gameObject.tag == specificTargetTag)
         {
             Explode();
         }
@@ -128,22 +139,47 @@ public class Fireball : MonoBehaviour
 
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, explosionRadius, enemyLayer);
 
-        foreach (Collider2D enemy in hitEnemies)
+        if (specificTarget != null)
         {
-            Debug.Log("enemy is taking damage");
-            
+            foreach (Collider2D enemy in hitEnemies)
+            {
+                Debug.Log("target is taking damage");
 
-            Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
-            IDamageable enemyController = enemy.GetComponent<IDamageable>();
-            if (enemyController != null)
-            {
-                enemyController.TakeDamage(damage);
+                Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
+                IDamageable enemyController = enemy.GetComponent<IDamageable>();
+                if (enemyController != null)
+                {
+                    enemyController.TakeDamage(damage);
+                }
+                if (enemyRb != null)
+                {
+                    Debug.Log("Pushing back");
+                    Vector2 knockbackDirection = (enemy.transform.position - transform.position).normalized;
+                    enemyRb.AddForce(knockbackDirection * 2f, ForceMode2D.Impulse);
+                }
             }
-            if (enemyRb != null)
+        }
+        else
+        {
+            Collider2D[] hitTarget = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
+            foreach (Collider2D target in hitTarget)
             {
-                Debug.Log("Pushing back");
-                Vector2 knockbackDirection = (enemy.transform.position - transform.position).normalized;
-                enemyRb.AddForce(knockbackDirection * 2f, ForceMode2D.Impulse);
+                if (target.gameObject.tag == specificTarget.tag)
+                {
+                    Debug.Log("target is getting damage");
+                    Rigidbody2D enemyRb = target.GetComponent<Rigidbody2D>();
+                    IDamageable enemyController = target.GetComponent<IDamageable>();
+                    if (enemyController != null)
+                    {
+                        enemyController.TakeDamage(damage);
+                    }
+                    if (enemyRb != null)
+                    {
+                        Debug.Log("Pushing back");
+                        Vector2 knockbackDirection = (target.transform.position - transform.position).normalized;
+                        enemyRb.AddForce(knockbackDirection * 2f, ForceMode2D.Impulse);
+                    }
+                }
             }
         }
 

@@ -18,7 +18,7 @@ public enum States
     attackThree
 }
 
-public class Hero2 : MonoBehaviour
+public class Hero2 : MonoBehaviour, IDamageable
 {
     [Header("Player stats")]
     [SerializeField] private float maxHealth = 100f;
