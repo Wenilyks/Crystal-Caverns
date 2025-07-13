@@ -320,22 +320,67 @@ public class Hero2 : MonoBehaviour, IDamageable
 
     public void SpawnFireball()
     {
-        if (fireballPrefab != null && fireballSpawnPoint != null)
+        Debug.Log("SpawnFireball method called");
+
+        if (fireballPrefab == null)
         {
-            GameObject fireball = Instantiate(fireballPrefab, fireballSpawnPoint.position, Quaternion.identity);
-
-            float direction = spriteHolder2.localScale.x > 0 ? 1 : -1;
-
-            fireball.transform.localScale = new Vector3(0.4f * direction, 0.4f, 0.4f);
-
-            Fireball fireballScript = fireball.GetComponent<Fireball>();
-            if (fireballScript != null)
-            {
-                fireballScript.Initialize(fireballSpeed, direction, true);
-            }
-
-            Destroy(fireball, 5f);
+            Debug.LogError("fireballPrefab is null!");
+            return;
         }
+
+        if (fireballSpawnPoint == null)
+        {
+            Debug.LogError("fireballSpawnPoint is null!");
+            return;
+        }
+
+        Debug.Log($"Attempting to spawn fireball at position: {fireballSpawnPoint.position}");
+        Debug.Log($"Fireball prefab layer: {fireballPrefab.layer}");
+        Debug.Log($"Fireball prefab name: {fireballPrefab.name}");
+
+        GameObject fireball = Instantiate(fireballPrefab, fireballSpawnPoint.position, Quaternion.identity);
+
+        if (fireball == null)
+        {
+            Debug.LogError("Failed to instantiate fireball!");
+            return;
+        }
+
+        Debug.Log($"Fireball successfully created! Name: {fireball.name}, Layer: {fireball.layer}");
+        Debug.Log($"Fireball position: {fireball.transform.position}");
+        Debug.Log($"Fireball active: {fireball.activeInHierarchy}");
+
+        // Check renderer component
+        SpriteRenderer renderer = fireball.GetComponent<SpriteRenderer>();
+        if (renderer != null)
+        {
+            Debug.Log($"Renderer enabled: {renderer.enabled}");
+            Debug.Log($"Renderer color: {renderer.color}");
+            Debug.Log($"Sorting layer: {renderer.sortingLayerName}");
+            Debug.Log($"Order in layer: {renderer.sortingOrder}");
+            Debug.Log($"Sprite: {renderer.sprite}");
+        }
+        else
+        {
+            Debug.LogError("No SpriteRenderer found on fireball!");
+        }
+
+        float direction = spriteHolder2.localScale.x > 0 ? 1 : -1;
+
+        fireball.transform.localScale = new Vector3(0.4f * direction, 0.4f, 0.4f);
+
+        Fireball fireballScript = fireball.GetComponent<Fireball>();
+        if (fireballScript != null)
+        {
+            Debug.Log("Fireball script found, initializing...");
+            fireballScript.Initialize(fireballSpeed, direction, true);
+        }
+        else
+        {
+            Debug.LogError("Fireball script not found on instantiated object!");
+        }
+
+        Destroy(fireball, 5f);
     }
 
     public IEnumerator SpawnFireballRain()

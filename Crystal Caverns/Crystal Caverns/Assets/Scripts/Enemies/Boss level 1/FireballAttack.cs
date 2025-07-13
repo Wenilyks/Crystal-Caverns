@@ -2,7 +2,7 @@
 using UnityEngine;
 
 public class FireballAttack : AttackBehaviour 
-{ 
+{
     public FireballAttack(FireWizardBossController boss) : base(boss) { }
 
     public override bool CanExecute()
@@ -31,6 +31,7 @@ public class FireballAttack : AttackBehaviour
         yield return new WaitForSeconds(0.3f);
 
         GameObject fireball = Object.Instantiate(boss.fireballPrefab, boss.firePoint.position, Quaternion.identity);
+        fireball.GetComponent<SpriteRenderer>().color = Color.red;
         Vector2 direction = (boss.player.position - boss.firePoint.position).normalized;
 
         Fireball fireballScript = fireball.GetComponent<Fireball>();
@@ -39,7 +40,7 @@ public class FireballAttack : AttackBehaviour
             fireballScript = fireball.AddComponent<Fireball>();
         }
 
-        fireballScript.Initialize(8f, direction.x, true, boss.player);
+        fireballScript.Initialize(8f, direction.x > 0 ? 1f : -1f, true, boss.player);
 
         yield return new WaitForSeconds(0.7f);
 

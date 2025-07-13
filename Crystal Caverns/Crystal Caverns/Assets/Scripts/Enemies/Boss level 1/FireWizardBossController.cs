@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 
-public class FireWizardBossController : MonoBehaviour 
+public class FireWizardBossController : MonoBehaviour, IDamageable
 {
     [Header("Boss stats")]
     public float maxHealth = 100f;
@@ -25,6 +25,7 @@ public class FireWizardBossController : MonoBehaviour
     public Transform player;
     public GameObject fireballPrefab;
     public Transform firePoint;
+    public GameObject fireballRainPrefab;
 
     public Rigidbody2D rb;
     public Animator animator;
@@ -118,6 +119,7 @@ public class FireWizardBossController : MonoBehaviour
         // execute best attack
         if (bestAttack != null)
             bestAttack.Execute();
+
     }
 
     public void HandleFlip(float directionX)

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3664580079041188797}
   m_Layer: 30
   m_Name: Hero 2
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32,8 +32,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4361599732016511913}
   - {fileID: 1824950004859825942}
   - {fileID: 2966819328697436182}
+  - {fileID: 6210604264500347888}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &6149242975247118267
@@ -75,30 +77,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6078c816ba74e44aa21652f0d958765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hero2
-  speed: 3
-  lives: 5
-  jumpForce: 15
+  maxHealth: 100
+  currentHealth: 100
+  maxMagicAura: 100
+  currentMagicAura: 100
+  magicRegenRate: 5
+  speed: 5
+  lives: 50
+  jumpForce: 20
+  groundCheckRadius: 0.4
+  healthBar: {fileID: 0}
+  magicAuraBar: {fileID: 0}
+  healthText: {fileID: 0}
+  magicAuraText: {fileID: 0}
+  barAnimationSpeed: 0.1
+  barAnimationDuration: 0.5
+  fireballPrefab: {fileID: 6845201832380516912, guid: eadeee6edde89284a9816008e5aabbd1, type: 3}
+  fireballPrefab2: {fileID: 6845201832380516912, guid: cc7ada67534eacb48a85c8e758c97cb9, type: 3}
+  fireballSpawnPoint: {fileID: 4361599732016511913}
+  fireballSpeed: 8
+  attackCooldown: 0.7
+  rainFireballCount: 5
+  rainSpread: 5
+  rainHeight: 6
+  groundPoundRadius: 3
+  groundPoundDamage: 25
+  fireballMagicCost: 20
+  rainFireballMagicCost: 25
+  groundPoundMagicCost: 25
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 536870912
+  groundPoundEffect: {fileID: 0}
+  magicAura: {fileID: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
   spriteHolder2: {fileID: 2966819328697436182}
   groundCheck: {fileID: 6600537158081535594}
-  groundCheckRadius: 0.1
-  fireballPrefab: {fileID: 6845201832380516912, guid: cc7ada67534eacb48a85c8e758c97cb9, type: 3}
-  fireballPrefab2: {fileID: 6845201832380516912, guid: eadeee6edde89284a9816008e5aabbd1, type: 3}
-  fireballSpawnPoint: {fileID: 1824950004859825942}
-  fireballSpeed: 8
-  attackCooldown: 0.7
-  rainFireballCount: 5
-  rainSpread: 5
-  rainHeight: 3
-  groundPoundRadius: 3
-  groundPoundDamage: 25
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  goundPoundEffect: {fileID: 0}
-  magicAura: {fileID: 0}
+  UI_Inventory: {fileID: 0}
+  positionToDrop: {fileID: 6210604264500347888}
 --- !u!61 &3664580079041188797
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -109,7 +127,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 5761e913b816adf4da359e0fb1406d2c, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -133,7 +151,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -1.5113499, y: -0.9669099}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -145,6 +163,37 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.0186048, y: 1.5120611}
   m_EdgeRadius: 0
+--- !u!1 &2958518595441246178
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6210604264500347888}
+  m_Layer: 30
+  m_Name: ItemsToDropPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6210604264500347888
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2958518595441246178}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.79, y: -0.68, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5025997688922811475}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3094941513996482560
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,7 +203,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1824950004859825942}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: fireball position
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -203,7 +252,7 @@ Transform:
   m_GameObject: {fileID: 3484596986584061036}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.5167675, y: -0.968, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.55806, y: 0.55806, z: 0.55806}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -320,4 +369,35 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2966819328697436182}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6525875311126314633
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4361599732016511913}
+  m_Layer: 28
+  m_Name: fireball position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4361599732016511913
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6525875311126314633}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.319, y: 0.319, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5025997688922811475}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

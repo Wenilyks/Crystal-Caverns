@@ -12,6 +12,7 @@ public class Fireball : MonoBehaviour
     [SerializeField] private GameObject explosionEffect;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask targetLayer;
     [SerializeField] private float explosionRadius = 1f;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private float detectionRadius = 10f;
@@ -73,7 +74,7 @@ public class Fireball : MonoBehaviour
         if (hasExploded) return;
 
         int layer = collision.gameObject.layer;
-        if (((1 << layer) & enemyLayer) != 0 || ((1 << layer) & groundLayer) != 0 || collision.gameObject.tag == specificTargetTag)
+        if (((1 << layer) & enemyLayer) != 0 || ((1 << layer) & groundLayer) != 0 || (((1 << layer) & targetLayer) != 0 && specificTarget != null))
         {
             Explode();
         }
@@ -137,13 +138,13 @@ public class Fireball : MonoBehaviour
             Destroy(explosion, 2f);
         }
 
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, explosionRadius, enemyLayer);
 
-        if (specificTarget != null)
+        if (specificTarget == null)
         {
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, explosionRadius, enemyLayer);
             foreach (Collider2D enemy in hitEnemies)
             {
-                Debug.Log("target is taking damage");
+                Debug.Log("enemy is taking damage");
 
                 Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
                 IDamageable enemyController = enemy.GetComponent<IDamageable>();
@@ -161,24 +162,29 @@ public class Fireball : MonoBehaviour
         }
         else
         {
-            Collider2D[] hitTarget = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
+            Debug.Log("I will explode in target");
+            Collider2D[] hitTarget = Physics2D.OverlapCircleAll(transform.position, explosionRadius, targetLayer);
             foreach (Collider2D target in hitTarget)
             {
-                if (target.gameObject.tag == specificTarget.tag)
+                Debug.Log($"Our target is: {target.gameObject.tag}");
+
+                Rigidbody2D enemyRb = target.GetComponent<Rigidbody2D>();
+                IDamageable enemyController = target.GetComponentInParent<IDamageable>();
+                Debug.Log("Checking if target controller is not equals to null");
+                if (enemyController != null)
                 {
-                    Debug.Log("target is getting damage");
-                    Rigidbody2D enemyRb = target.GetComponent<Rigidbody2D>();
-                    IDamageable enemyController = target.GetComponent<IDamageable>();
-                    if (enemyController != null)
-                    {
-                        enemyController.TakeDamage(damage);
-                    }
-                    if (enemyRb != null)
-                    {
-                        Debug.Log("Pushing back");
-                        Vector2 knockbackDirection = (target.transform.position - transform.position).normalized;
-                        enemyRb.AddForce(knockbackDirection * 2f, ForceMode2D.Impulse);
-                    }
+                    Debug.Log("target is taking damage");
+                    enemyController.TakeDamage(damage);
+                }
+                else
+                {
+                    Debug.Log("target controller is null");
+                }
+                if (enemyRb != null)
+                {
+                    Debug.Log("Pushing back");
+                    Vector2 knockbackDirection = (target.transform.position - transform.position).normalized;
+                    enemyRb.AddForce(knockbackDirection * 2f, ForceMode2D.Impulse);
                 }
             }
         }

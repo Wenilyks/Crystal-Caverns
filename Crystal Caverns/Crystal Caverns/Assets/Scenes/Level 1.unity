@@ -484138,8 +484138,9 @@ MonoBehaviour:
   fireballDamage: 15
   fireballRainDamage: 10
   player: {fileID: 1681797490}
-  fireballPrefab: {fileID: 6845201832380516912, guid: cc7ada67534eacb48a85c8e758c97cb9, type: 3}
+  fireballPrefab: {fileID: 6845201832380516912, guid: eadeee6edde89284a9816008e5aabbd1, type: 3}
   firePoint: {fileID: 1841593091}
+  fireballRainPrefab: {fileID: 6845201832380516912, guid: cc7ada67534eacb48a85c8e758c97cb9, type: 3}
   rb: {fileID: 0}
   animator: {fileID: 0}
   lastAttackTime: 0

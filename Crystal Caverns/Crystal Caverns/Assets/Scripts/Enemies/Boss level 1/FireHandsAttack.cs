@@ -53,6 +53,7 @@ public class FireHandsAttack : AttackBehaviour
 
         yield return new WaitForSeconds(1f);
 
+        boss.animator.SetInteger("state", 0);
         boss.isAttacking = false;
         boss.lastAttackTime = Time.time;
     }

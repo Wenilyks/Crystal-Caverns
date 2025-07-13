@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1339758382979438208}
   - component: {fileID: 4934972771009526292}
   - component: {fileID: 8193396423612371876}
-  m_Layer: 30
+  m_Layer: 28
   m_Name: Fireball 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,6 +209,9 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 1073741824
   explosionRadius: 1
   rb: {fileID: 5680382715273721908}
   detectionRadius: 10

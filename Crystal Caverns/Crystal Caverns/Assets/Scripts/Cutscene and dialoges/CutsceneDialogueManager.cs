@@ -267,7 +267,6 @@ public class CutsceneDialogueManager : MonoBehaviour
     {
         isDialogueActive = false;
 
-        AudioManager.Instance.PlayMusic("Boss level 1 theme");
 
         CameraController cameraController = Camera.main.GetComponent<CameraController>();
         if (cameraController != null)
@@ -279,6 +278,7 @@ public class CutsceneDialogueManager : MonoBehaviour
         Time.timeScale = 1f;
 
         OnDialogueEnd?.Invoke();
+        AudioManager.Instance.PlayMusic("Boss level 1 theme");
     }
 
     public bool IsDialogueActive()

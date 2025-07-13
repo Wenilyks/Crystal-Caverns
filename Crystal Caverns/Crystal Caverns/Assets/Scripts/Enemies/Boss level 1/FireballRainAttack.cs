@@ -29,6 +29,7 @@ public class FireballRainAttack : AttackBehaviour
 
         return 1f;
     }
+
     private IEnumerator ExecuteAttack()
     {
         boss.isAttacking = true;
@@ -43,7 +44,7 @@ public class FireballRainAttack : AttackBehaviour
         int fireballCount = 5;
         float timeBetweenFireballs = 0.3f;
 
-        for (int i = 0;  i < fireballCount; i++)
+        for (int i = 0; i < fireballCount; i++)
         {
             Vector3 spawnPosition = new Vector3(
                 boss.player.position.x + UnityEngine.Random.Range(-3f, 3f),
@@ -52,20 +53,32 @@ public class FireballRainAttack : AttackBehaviour
             );
 
             AudioManager.Instance.PlaySFX("Magic sphere");
-            GameObject fireball = UnityEngine.Object.Instantiate(boss.fireballPrefab, spawnPosition, Quaternion.identity);
+            GameObject fireball = UnityEngine.Object.Instantiate(boss.fireballRainPrefab, spawnPosition, Quaternion.identity);
 
+            fireball.GetComponent<SpriteRenderer>().color = Color.red;
             fireball.transform.localRotation = Quaternion.Euler(0, 0, -90f);
 
             Debug.Log($"Fireball spawned at: {spawnPosition}");
 
-            Rigidbody2D fireballRb = fireball.GetComponent<Rigidbody2D>();
-            if (fireballRb != null)
+            // Initialize the Fireball component WITHOUT aim (just falling)
+            Fireball fireballScript = fireball.GetComponent<Fireball>();
+            if (fireballScript != null)
             {
-                Vector2 fallVelocity = new Vector2(
-                    UnityEngine.Random.Range(-2f, 2f),
-                    -8f * 0.7f
-                );
-                fireballRb.linearVelocity = fallVelocity;
+                // Set aim to false so fireballs just fall straight down
+                fireballScript.Initialize(8f, 1f, false, boss.player);
+            }
+            else
+            {
+                // Fallback: set velocity manually if no Fireball script
+                Rigidbody2D fireballRb = fireball.GetComponent<Rigidbody2D>();
+                if (fireballRb != null)
+                {
+                    Vector2 fallVelocity = new Vector2(
+                        UnityEngine.Random.Range(-2f, 2f),
+                        -8f * 0.7f
+                    );
+                    fireballRb.linearVelocity = fallVelocity;
+                }
             }
 
             UnityEngine.Object.Destroy(fireball, 4f);
@@ -75,6 +88,6 @@ public class FireballRainAttack : AttackBehaviour
         yield return new WaitForSeconds(1f);
 
         boss.isAttacking = false;
-        boss.lastAttackTime = Time.time;    
+        boss.lastAttackTime = Time.time;
     }
 }
