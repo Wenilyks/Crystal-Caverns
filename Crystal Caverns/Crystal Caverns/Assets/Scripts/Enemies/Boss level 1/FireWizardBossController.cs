@@ -12,7 +12,7 @@ public class FireWizardBossController : MonoBehaviour, IDamageable
     public float maxHealth = 100f;
     public float currentHealth;
     public float moveSpeed = 2f;
-    public float attackRange = 5f;
+    public float attackRange = 10f;
     public float fireHandsRange = 2f;
 
     [Header("Attack settings")]
@@ -31,6 +31,12 @@ public class FireWizardBossController : MonoBehaviour, IDamageable
     public Animator animator;
     public float lastAttackTime;
     public bool isAttacking = false;
+
+    private float lastPlayerDistance = 0f;
+    private bool playerMovingAway = false;
+    private float aggressionMultiplier = 1f;
+    private int consecutiveAttacks = 0;
+    private float lastAttackCheckTime = 0f;
 
     // boss state
     private BossState currentState;
@@ -77,12 +83,33 @@ public class FireWizardBossController : MonoBehaviour, IDamageable
             return;
         }
 
+        UpdatePlayerTracking();
+
         // update current state
         currentState?.Update();
     }
 
+    private void UpdatePlayerTracking()
+    {
+        float currentDistance = Vector2.Distance(transform.position, player.transform.position);
+
+        playerMovingAway = currentDistance > lastPlayerDistance;
+
+        // increasing aggression when player is kiting
+        if (playerMovingAway && currentDistance < attackRange * 1.5f)
+        {
+            aggressionMultiplier = Mathf.Min(aggressionMultiplier + Time.deltaTime * 0.5f, 2f);
+        }
+        else
+        {
+            aggressionMultiplier = Mathf.Max(aggressionMultiplier - Time.deltaTime * 0.2f, 1f);
+        }
+        lastPlayerDistance = currentDistance;
+    }
+
     public void ChangeState(BossState state) 
     {
+        if (isAttacking && !(state is HurtState)) return;
         // exit current state
         currentState?.Exit();
         // assign new state
@@ -91,23 +118,21 @@ public class FireWizardBossController : MonoBehaviour, IDamageable
         currentState?.Enter();
     }
 
-    public void SelecteExecuteAttack()
+    public void SelectExecuteAttack()
     {
         float highestPriority = 0f;
         AttackBehaviour bestAttack = null;
-
-        // foreach attack in attack behaviours
-            // if we can execute attack
-                // get the priority of the attack
-                // if priority higher than current
-                    // update highest priority
-                    // best attack = attack
 
         foreach (var attack in attacks)
         {
             if (attack.CanExecute())
             {
-                float priority = attack.GetPriority();
+                float priority = attack.GetPriority() * aggressionMultiplier;
+
+                if (attack is FireHandsAttack && playerMovingAway) priority *= 1.5f;
+
+                if (attack is FireballAttack && Vector2.Distance(transform.position, player.position) > fireHandsRange) priority *= 1.2f;
+
                 if (priority > highestPriority)
                 {
                     highestPriority = priority;
@@ -118,8 +143,34 @@ public class FireWizardBossController : MonoBehaviour, IDamageable
 
         // execute best attack
         if (bestAttack != null)
+        {
             bestAttack.Execute();
+            consecutiveAttacks++;
 
+            if (consecutiveAttacks > 1)
+            {
+                lastAttackTime = Time.time - (attackCooldown * 0.3f);
+            }
+        }
+    }
+
+    public float GetDynamicAttackCooldown()
+    {
+        float baseCooldown = attackCooldown;
+
+        baseCooldown /= aggressionMultiplier;
+
+        float distance = Vector2.Distance(transform.position, player.position);
+        if (distance <= fireHandsRange)
+            baseCooldown *= 0.7f;
+
+        float healthPercentage = currentHealth / maxHealth;
+        if (healthPercentage < 0.5f)
+        {
+            baseCooldown *= 0.8f;
+        }
+
+        return Mathf.Max(baseCooldown, 0.5f);
     }
 
     public void HandleFlip(float directionX)
@@ -136,6 +187,10 @@ public class FireWizardBossController : MonoBehaviour, IDamageable
 
         currentHealth -= damage;
         currentHealth = Mathf.Max(0, currentHealth);
+
+        consecutiveAttacks = 0;
+
+        aggressionMultiplier = Mathf.Min(aggressionMultiplier * 0.3f, 2f);
 
         if (currentHealth > 0)
         {
@@ -159,6 +214,6 @@ public class FireWizardBossController : MonoBehaviour, IDamageable
         Gizmos.DrawWireSphere(transform.position, attackRange);
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, fireHandsDamage);
+        Gizmos.DrawWireSphere(transform.position, fireHandsRange);
     }
 }

@@ -1525,6 +1525,7 @@ MonoBehaviour:
   detectionRange: 5
   teleportDestination: {fileID: 377140132}
   fadeTransitionTime: 1
+  canUseMultiplyTimes: 0
   interactionPrompt: {fileID: 1888358664}
   interactionKey: 120
   magicalParticles: {fileID: 205859380}
@@ -21787,6 +21788,7 @@ MonoBehaviour:
   detectionRange: 5
   teleportDestination: {fileID: 205859377}
   fadeTransitionTime: 1
+  canUseMultiplyTimes: 0
   interactionPrompt: {fileID: 1701808289}
   interactionKey: 120
   magicalParticles: {fileID: 1019950989}
@@ -484131,7 +484133,7 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 0
   moveSpeed: 2
-  attackRange: 5
+  attackRange: 10
   fireHandsRange: 2
   attackCooldown: 2
   fireHandsDamage: 20

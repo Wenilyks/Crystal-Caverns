@@ -41,8 +41,7 @@ public class FireballRainAttack : AttackBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        int fireballCount = 5;
-        float timeBetweenFireballs = 0.3f;
+        int fireballCount = 10;
 
         for (int i = 0; i < fireballCount; i++)
         {
@@ -60,21 +59,18 @@ public class FireballRainAttack : AttackBehaviour
 
             Debug.Log($"Fireball spawned at: {spawnPosition}");
 
-            // Initialize the Fireball component WITHOUT aim (just falling)
             Fireball fireballScript = fireball.GetComponent<Fireball>();
             if (fireballScript != null)
             {
-                // Set aim to false so fireballs just fall straight down
-                fireballScript.Initialize(8f, 1f, false, boss.player);
+                fireballScript.Initialize(8f, 0f, false, boss.player);
             }
             else
             {
-                // Fallback: set velocity manually if no Fireball script
                 Rigidbody2D fireballRb = fireball.GetComponent<Rigidbody2D>();
                 if (fireballRb != null)
                 {
                     Vector2 fallVelocity = new Vector2(
-                        UnityEngine.Random.Range(-2f, 2f),
+                        UnityEngine.Random.Range(-4f, 4f),
                         -8f * 0.7f
                     );
                     fireballRb.linearVelocity = fallVelocity;

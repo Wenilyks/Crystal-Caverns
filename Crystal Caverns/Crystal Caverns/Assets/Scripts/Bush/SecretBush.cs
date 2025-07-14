@@ -13,6 +13,7 @@ public class SecretBush : MonoBehaviour
     [Header("Teleportation")]
     public Transform teleportDestination;
     public float fadeTransitionTime = 1.7f;
+    public bool canUseMultiplyTimes = false;
 
     [Header("UI")]
     public GameObject interactionPrompt;
@@ -52,7 +53,7 @@ public class SecretBush : MonoBehaviour
 
     private void Update()
     {
-        if (player == null || secretDiscovered) return;
+        if (player == null || (secretDiscovered && !canUseMultiplyTimes)) return;
 
         CheckPlayerDistance();
         HandleAnimation();
@@ -181,6 +182,7 @@ public class SecretBush : MonoBehaviour
     private void SetupFadePanel()
     {
         GameObject fadeGO = GameObject.Find("FadePanel");
+        if (fadeGO == null) return;
         fadePanel = fadeGO.GetComponentInChildren<CanvasGroup>();
     }
 

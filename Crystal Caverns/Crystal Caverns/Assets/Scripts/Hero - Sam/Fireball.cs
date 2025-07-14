@@ -42,7 +42,16 @@ public class Fireball : MonoBehaviour
 
         if (rb != null)
         {
-            rb.linearVelocity = new Vector2(direction * speed, 0);
+            if (direction == 0)
+            {
+                Vector2 fallVelocity = new Vector2(
+                        UnityEngine.Random.Range(-2f, 2f),
+                        -8f * 0.7f
+                    );
+                rb.linearVelocity = fallVelocity;
+            }
+            else 
+                rb.linearVelocity = new Vector2(direction * speed, 0);
         }
     }
 

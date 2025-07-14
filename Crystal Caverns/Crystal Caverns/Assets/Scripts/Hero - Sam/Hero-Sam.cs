@@ -485,6 +485,7 @@ public class Hero2 : MonoBehaviour, IDamageable
     {
         Debug.Log($"current state is {State.ToString()}");
         float animationLength = GetAnimationLength(States.hit);
+
         yield return new WaitForSeconds(animationLength);
         isGettingHit = false;
     }

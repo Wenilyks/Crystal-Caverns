@@ -14851,6 +14851,7 @@ MonoBehaviour:
   detectionRange: 3
   teleportDestination: {fileID: 467076260}
   fadeTransitionTime: 1.7
+  canUseMultiplyTimes: 1
   interactionPrompt: {fileID: 0}
   interactionKey: 120
   magicalParticles: {fileID: 0}
@@ -15692,6 +15693,7 @@ MonoBehaviour:
   detectionRange: 3
   teleportDestination: {fileID: 540527697}
   fadeTransitionTime: 1.7
+  canUseMultiplyTimes: 1
   interactionPrompt: {fileID: 0}
   interactionKey: 120
   magicalParticles: {fileID: 0}
