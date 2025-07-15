@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 public abstract class BossState
 {
-    protected FireWizardBossController boss;
+    protected BossController boss;
 
-    public BossState(FireWizardBossController boss)
+    public BossState(BossController boss)
     {
-        this.boss = boss;  
+        this.boss = boss;
     }
 
     public abstract void Enter();

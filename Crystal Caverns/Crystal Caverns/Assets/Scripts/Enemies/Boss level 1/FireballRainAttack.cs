@@ -12,7 +12,7 @@ public class FireballRainAttack : AttackBehaviour
 
     public override bool CanExecute()
     {
-        return boss.fireballPrefab != null;
+        return ((FireWizardBossController)boss).fireballPrefab != null;
     }
 
     public override void Execute()
@@ -52,7 +52,7 @@ public class FireballRainAttack : AttackBehaviour
             );
 
             AudioManager.Instance.PlaySFX("Magic sphere");
-            GameObject fireball = UnityEngine.Object.Instantiate(boss.fireballRainPrefab, spawnPosition, Quaternion.identity);
+            GameObject fireball = UnityEngine.Object.Instantiate(((FireWizardBossController)boss).fireballRainPrefab, spawnPosition, Quaternion.identity);
 
             fireball.GetComponent<SpriteRenderer>().color = Color.red;
             fireball.transform.localRotation = Quaternion.Euler(0, 0, -90f);

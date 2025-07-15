@@ -7,9 +7,9 @@ using UnityEngine;
 
 public abstract class AttackBehaviour
 {
-    protected FireWizardBossController boss;
+    protected BossController boss;
 
-    public AttackBehaviour (FireWizardBossController boss)
+    public AttackBehaviour(BossController boss)
     {
         this.boss = boss;
     }
@@ -17,4 +17,5 @@ public abstract class AttackBehaviour
     public abstract bool CanExecute();
     public abstract void Execute();
     public abstract float GetPriority();
+    public virtual string GetAttackName() => GetType().Name;
 }

@@ -9,7 +9,7 @@ public class HurtState : BossState
 {
     private float hurtDuration = 0.5f;
     public float hurtTimer;
-    public HurtState(FireWizardBossController boss) : base(boss) { }
+    public HurtState(BossController boss) : base(boss) { }
 
     public override void Enter()
     {
@@ -24,7 +24,7 @@ public class HurtState : BossState
 
         if (hurtTimer >= hurtDuration)
         {
-            boss.ChangeState(boss.chasingState);
+            boss.ChangeState("Chasing");
         }
     }
 

@@ -13,7 +13,7 @@ public class FireHandsAttack : AttackBehaviour
     public override bool CanExecute()
     {
         float distance = Vector2.Distance(boss.transform.position, boss.player.position);
-        return distance <= boss.fireHandsRange;
+        return distance <= ((FireWizardBossController)boss).fireHandsRange;
     }
 
     public override void Execute()
@@ -39,13 +39,13 @@ public class FireHandsAttack : AttackBehaviour
 
         float distance = Vector2.Distance(boss.transform.position, boss.player.position);
         
-        if (distance <= boss.fireHandsRange)
+        if (distance <= ((FireWizardBossController)boss).fireHandsRange)
         {
             Hero2 playerController = boss.player.GetComponent<Hero2>();
 
             if (playerController != null)
             {
-                playerController.TakeDamage(boss.fireHandsDamage);
+                playerController.TakeDamage(((FireWizardBossController)boss).fireHandsDamage);
             }
 
             Debug.Log("Fire hands hit player!");

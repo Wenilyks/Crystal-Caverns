@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class IdleState : BossState
 {
-    public IdleState(FireWizardBossController boss) : base(boss) { }
+    public IdleState(BossController boss) : base(boss) { }
 
     public override void Enter()
     {
@@ -20,7 +20,7 @@ public class IdleState : BossState
         float distanceToPlayer = Vector2.Distance(boss.transform.position, boss.player.position);
         if (distanceToPlayer <= boss.attackRange)
         {
-            boss.ChangeState(boss.chasingState);
+            boss.ChangeState("Chasing");
         }
     }
 

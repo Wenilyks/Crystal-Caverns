@@ -12,7 +12,7 @@ public class ChasingState : BossState
     private float lostPlayerTime = 2f;
     private float lastPlayerDistance = 0f;
     private bool playerWasInRange = false;
-    public ChasingState(FireWizardBossController boss) : base(boss) { }
+    public ChasingState(BossController boss) : base(boss) { }
 
     public override void Enter()
     {
@@ -53,19 +53,16 @@ public class ChasingState : BossState
 
         bool shouldAttack = false;
 
-        // immediate attack if player enters range
         if (distanceToPlayer <= boss.attackRange && !playerWasInRange)
         {
             shouldAttack = true;
         }
-        // Normal cooldown-based attacks
         else if (distanceToPlayer <= boss.attackRange &&
                  Time.time - boss.lastAttackTime >= boss.attackCooldown)
         {
             shouldAttack = true;
         }
-        // Reduced cooldown for close-range attacks
-        else if (distanceToPlayer <= boss.fireHandsRange &&
+        else if (distanceToPlayer <= ((FireWizardBossController)boss).fireHandsRange &&
                  Time.time - boss.lastAttackTime >= boss.attackCooldown * 0.6f)
         {
             shouldAttack = true;
@@ -79,7 +76,7 @@ public class ChasingState : BossState
         float extendedRange = boss.attackRange * 2.5f;
         if (distanceToPlayer > extendedRange && lostPlayerTimer > lostPlayerTime)
         {
-            boss.ChangeState(boss.idleState);
+            boss.ChangeState("Idle");
         }
     }
 

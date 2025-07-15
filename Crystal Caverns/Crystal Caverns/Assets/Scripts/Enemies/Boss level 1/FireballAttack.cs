@@ -7,7 +7,7 @@ public class FireballAttack : AttackBehaviour
 
     public override bool CanExecute()
     {
-        return boss.fireballPrefab != null && boss.firePoint != null;
+        return ((FireWizardBossController)boss).fireballPrefab != null && ((FireWizardBossController)boss).firePoint != null;
     }
 
     public override void Execute()
@@ -30,9 +30,9 @@ public class FireballAttack : AttackBehaviour
 
         yield return new WaitForSeconds(0.3f);
 
-        GameObject fireball = Object.Instantiate(boss.fireballPrefab, boss.firePoint.position, Quaternion.identity);
+        GameObject fireball = Object.Instantiate(((FireWizardBossController)boss).fireballPrefab, ((FireWizardBossController)boss).firePoint.position, Quaternion.identity);
         fireball.GetComponent<SpriteRenderer>().color = Color.red;
-        Vector2 direction = (boss.player.position - boss.firePoint.position).normalized;
+        Vector2 direction = (boss.player.position - ((FireWizardBossController)boss).firePoint.position).normalized;
 
         Fireball fireballScript = fireball.GetComponent<Fireball>();
         if (fireballScript == null)
