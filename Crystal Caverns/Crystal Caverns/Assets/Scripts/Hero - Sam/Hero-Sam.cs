@@ -61,6 +61,15 @@ public class Hero2 : MonoBehaviour, IDamageable
     [SerializeField] private float groundPoundMagicCost = 25f;
     [SerializeField] private LayerMask enemyLayer;
 
+    [Header("Transformation")]
+    [SerializeField] private List<BossTransformation> unlockedTransformations = new List<BossTransformation>();
+    [SerializeField] private KeyCode transformationKey = KeyCode.T;
+    [SerializeField] private int currentTransformationIndex = 0;
+    [SerializeField] private Transform transformationUI;
+    [SerializeField] private Image transformationIcon;
+    [SerializeField] private TMP_Text transformationText;
+    [SerializeField] private Image transformationCooldownOverlay;
+
     [Header("Effects")]
     [SerializeField] private GameObject groundPoundEffect;
     [SerializeField] private ParticleSystem magicAura;
@@ -81,6 +90,21 @@ public class Hero2 : MonoBehaviour, IDamageable
     private bool isAttacking = false;
     private bool isGettingHit = false;
 
+    private bool isTransformed = false;
+    private BossTransformation currentTransformation;
+    private float transformationTimer = 0f;
+    private float transformationCooldown = 0f;
+    private float transformationCooldownTime = 60f;
+
+    private float originalMoveSpeed;
+    private float originalMaxHealth;
+    private float originalMaxMagicAura;
+    private RuntimeAnimatorController originalAnimator;
+    private Vector3 originalScale;
+
+    private Dictionary<KeyCode, BossAbility> transformationAbilities = new Dictionary<KeyCode, BossAbility>();
+    private Dictionary<BossAbility, float> abilityCooldowns = new Dictionary<BossAbility, float>();
+
     private Rigidbody2D rb;
     private Animator anim;
     public static Hero2 Instance { get; set; }
@@ -98,7 +122,6 @@ public class Hero2 : MonoBehaviour, IDamageable
         rb = GetComponent<Rigidbody2D>();
         anim = spriteHolder2.GetComponent<Animator>();
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         ItemWorld itemWorld = collision.GetComponent<ItemWorld>();
@@ -121,6 +144,14 @@ public class Hero2 : MonoBehaviour, IDamageable
         if (healthBar != null) healthBar.fillAmount = 1f;
         if (magicAuraBar != null) magicAuraBar.fillAmount = 1f;
         UpdateTexts();
+
+        originalMoveSpeed = speed;
+        originalMaxHealth = maxHealth;
+        originalMaxMagicAura = maxMagicAura;
+        originalAnimator = anim.runtimeAnimatorController;
+        originalScale = spriteHolder2.localScale;
+
+        UpdateTransformationUI();
     }
 
     private void FixedUpdate()
@@ -156,7 +187,6 @@ public class Hero2 : MonoBehaviour, IDamageable
             UseItem(UI_Inventory.GetSelectedItem());
         }
 
-        Debug.Log(currentMagicAura);
         if (isGrounded && !isAttacking && !isGettingHit)
         {
             Debug.Log("Idle state lol");
@@ -188,7 +218,7 @@ public class Hero2 : MonoBehaviour, IDamageable
             magicAuraBar.DOFillAmount(targetMagicValue, barAnimationDuration);  
         }
 
-        if (canAttack)
+        if (canAttack && !isTransformed)
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
@@ -219,6 +249,390 @@ public class Hero2 : MonoBehaviour, IDamageable
             }
         }
         UpdateTexts();
+
+        HandleTransformation();
+        UpdateTransformationTimer();
+        UpdateAbilityCooldowns();
+
+        UpdateTransformationUI();
+    }
+
+    private void HandleTransformation()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !isTransformed)
+        {
+            CycleTransformation();
+        }
+
+        if (Input.GetKeyDown(transformationKey))
+        {
+            if (!isTransformed && transformationCooldown <= 0)
+            {
+                if (unlockedTransformations.Count > 0 && currentTransformationIndex < unlockedTransformations.Count)
+                {
+                    Transform();
+                }
+            }
+            else if (isTransformed)
+            {
+                Detransform();
+            }
+        }
+
+        if (isTransformed && currentTransformation != null)
+        {
+            foreach (var ability in transformationAbilities)
+            {
+                if (Input.GetKeyDown(ability.Key))
+                {
+                    UseTransformationAbility(ability.Value);
+                }
+            }
+        }
+    }
+
+    private void CycleTransformation()
+    {
+        if (unlockedTransformations.Count == 0) return;
+        
+        currentTransformationIndex = (currentTransformationIndex + 1) % unlockedTransformations.Count;
+        UpdateTransformationUI();
+    }
+    
+    private void Transform()
+    {
+        if (unlockedTransformations.Count == 0) return;
+        
+        currentTransformation = unlockedTransformations[currentTransformationIndex];
+        isTransformed = true;
+        transformationTimer = currentTransformation.transformationDuration;
+        
+        ApplyTransformationStats();
+        ApplyTransformationVisuals();
+        SetupTransformationAbilities();
+        
+        if (currentTransformation.transformationEffect != null)
+        {
+            GameObject effect = Instantiate(currentTransformation.transformationEffect, transform.position, Quaternion.identity);
+            Destroy(effect, 3f);
+        }
+        
+        AudioManager.Instance.PlaySFX("Transform");
+        
+        Debug.Log($"Transformed into {currentTransformation.bossName}!");
+    }
+    
+    private void Detransform()
+    {
+        if (!isTransformed) return;
+        
+        isTransformed = false;
+        transformationCooldown = transformationCooldownTime;
+        
+        RestoreOriginalStats();
+        RestoreOriginalVisuals();
+        ClearTransformationAbilities();
+        
+        AudioManager.Instance.PlaySFX("Detransform");
+        
+        Debug.Log("Detransformed back to normal!");
+    }
+    
+    private void ApplyTransformationStats()
+    {
+        speed = originalMoveSpeed * currentTransformation.moveSpeedMultiplier;
+        maxHealth = originalMaxHealth * currentTransformation.healthMultiplier;
+        maxMagicAura = originalMaxMagicAura * currentTransformation.magicMultiplier;
+        
+        currentHealth = Mathf.Min(currentHealth + (maxHealth * 0.2f), maxHealth);
+        currentMagicAura = Mathf.Min(currentMagicAura + (maxMagicAura * 0.3f), maxMagicAura);
+        
+        targetHealthValue = currentHealth / maxHealth;
+        targetMagicValue = currentMagicAura / maxMagicAura;
+    }
+    
+    private void ApplyTransformationVisuals()
+    {
+        if (currentTransformation.bossAnimator != null)
+        {
+            anim.runtimeAnimatorController = currentTransformation.bossAnimator;
+        }
+        
+        SpriteRenderer spriteRenderer = spriteHolder2.GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = currentTransformation.transformationColor;
+        }
+        
+        spriteHolder2.localScale = originalScale * 1.1f;
+    }
+    
+    private void SetupTransformationAbilities()
+    {
+        transformationAbilities.Clear();
+        abilityCooldowns.Clear();
+        
+        foreach (var ability in currentTransformation.abilities)
+        {
+            transformationAbilities[ability.activationKey] = ability;
+            abilityCooldowns[ability] = 0f;
+        }
+    }
+    
+    private void RestoreOriginalStats()
+    {
+        speed = originalMoveSpeed;
+        maxHealth = originalMaxHealth;
+        maxMagicAura = originalMaxMagicAura;
+        
+        currentHealth = Mathf.Min(currentHealth, maxHealth);
+        currentMagicAura = Mathf.Min(currentMagicAura, maxMagicAura);
+        
+        targetHealthValue = currentHealth / maxHealth;
+        targetMagicValue = currentMagicAura / maxMagicAura;
+    }
+    
+    private void RestoreOriginalVisuals()
+    {
+        anim.runtimeAnimatorController = originalAnimator;
+        
+        SpriteRenderer spriteRenderer = spriteHolder2.GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = Color.white;
+        }
+        
+        spriteHolder2.localScale = originalScale;
+    }
+    
+    private void ClearTransformationAbilities()
+    {
+        transformationAbilities.Clear();
+        abilityCooldowns.Clear();
+    }
+    
+    private void UpdateTransformationTimer()
+    {
+        if (isTransformed)
+        {
+            transformationTimer -= Time.deltaTime;
+            
+            currentMagicAura -= currentTransformation.magicCostPerSecond * Time.deltaTime;
+            targetMagicValue = currentMagicAura / maxMagicAura;
+            
+            if (transformationTimer <= 0 || currentMagicAura <= 0)
+            {
+                Detransform();
+            }
+        }
+        
+        if (transformationCooldown > 0)
+        {
+            transformationCooldown -= Time.deltaTime;
+        }
+    }
+    
+    private void UpdateAbilityCooldowns()
+    {
+        var keys = new List<BossAbility>(abilityCooldowns.Keys);
+        foreach (var ability in keys)
+        {
+            if (abilityCooldowns[ability] > 0)
+            {
+                abilityCooldowns[ability] -= Time.deltaTime;
+            }
+        }
+    }
+    
+    private void UseTransformationAbility(BossAbility ability)
+    {
+        if (!isTransformed || currentTransformation == null) return;
+        if (abilityCooldowns[ability] > 0) return;
+        if (currentMagicAura < ability.magicCost) return;
+        
+        StartCoroutine(ExecuteTransformationAbility(ability));
+        
+        abilityCooldowns[ability] = ability.cooldown;
+        
+        currentMagicAura -= ability.magicCost;
+        targetMagicValue = currentMagicAura / maxMagicAura;
+        
+        Debug.Log($"Used {ability.abilityName}!");
+    }
+    
+    private IEnumerator ExecuteTransformationAbility(BossAbility ability)
+    {
+        isAttacking = true;
+        canAttack = false;
+        
+        State = ability.animationState;
+        
+        float animationLength = GetAnimationLength(ability.animationState);
+        yield return new WaitForSeconds(animationLength * 0.5f);
+        
+        ExecuteAbilityEffect(ability);
+        
+        yield return new WaitForSeconds(animationLength * 0.5f);
+        
+        isAttacking = false;
+        canAttack = true;
+    }
+    
+    private void ExecuteAbilityEffect(BossAbility ability)
+    {
+        switch (ability.abilityName)
+        {
+            case "Boss Fireball":
+                SpawnBossFireball(ability);
+                break;
+            case "Fire Hands":
+                ExecuteFireHands(ability);
+                break;
+            case "Fireball Rain":
+                StartCoroutine(SpawnBossFireballRain(ability));
+                break;
+            default:
+                if (ability.effectPrefab != null)
+                {
+                    GameObject effect = Instantiate(ability.effectPrefab, fireballSpawnPoint.position, Quaternion.identity);
+                    Destroy(effect, 3f);
+                }
+                break;
+        }
+    }
+    
+    private void SpawnBossFireball(BossAbility ability)
+    {
+        GameObject fireball = Instantiate(fireballPrefab, fireballSpawnPoint.position, Quaternion.identity);
+        float direction = spriteHolder2.localScale.x > 0 ? 1 : -1;
+        
+        fireball.transform.localScale = new Vector3(0.4f * direction, 0.4f, 0.4f);
+        fireball.GetComponent<SpriteRenderer>().color = Color.red;
+        
+        Fireball fireballScript = fireball.GetComponent<Fireball>();
+        if (fireballScript != null)
+        {
+            fireballScript.Initialize(fireballSpeed * 1.5f, direction, true);
+        }
+        
+        Destroy(fireball, 5f);
+    }
+    
+    private void ExecuteFireHands(BossAbility ability)
+    {
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, ability.range, enemyLayer);
+        
+        foreach (Collider2D enemy in hitEnemies)
+        {
+            IDamageable enemyScript = enemy.GetComponent<IDamageable>();
+            if (enemyScript != null)
+            {
+                enemyScript.TakeDamage(ability.damage);
+            }
+        }
+    }
+    
+    private IEnumerator SpawnBossFireballRain(BossAbility ability)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            Vector3 spawnPoint = new Vector3(
+                transform.position.x + Random.Range(-4f, 4f),
+                transform.position.y + 6f,
+                0
+            );
+            
+            GameObject fireball = Instantiate(fireballPrefab2, spawnPoint, Quaternion.identity);
+            fireball.transform.localRotation = Quaternion.Euler(0, 0, -90f);
+            
+            Rigidbody2D fireballRb = fireball.GetComponent<Rigidbody2D>();
+            if (fireballRb != null)
+            {
+                fireballRb.linearVelocity = new Vector2(Random.Range(-3f, 3f), -10f);
+            }
+            
+            Destroy(fireball, 4f);
+            yield return new WaitForSeconds(0.15f);
+        }
+    }
+
+    private void UpdateTransformationUI()
+    {
+        if (transformationIcon != null && transformationText != null)
+        {
+            if (unlockedTransformations.Count > 0)
+            {
+                var currentTrans = unlockedTransformations[currentTransformationIndex];
+                transformationIcon.sprite = currentTrans.bossSprite;
+                transformationText.text = currentTrans.bossName;
+
+                if (!isTransformed && transformationCooldown > 0)
+                {
+                    transformationIcon.color = Color.red; // On cooldown
+                }
+                else
+                {
+                    transformationIcon.color = Color.white; // Available
+                }
+            }
+        }
+
+        if (transformationCooldownOverlay != null)
+        {
+            if (transformationCooldown > 0)
+            {
+                transformationCooldownOverlay.fillAmount = transformationCooldown / transformationCooldownTime;
+                transformationCooldownOverlay.gameObject.SetActive(true);
+            }
+            else
+            {
+                transformationCooldownOverlay.fillAmount = 0f;
+                transformationCooldownOverlay.gameObject.SetActive(false);
+            }
+        }
+
+        if (transformationText != null && transformationCooldown > 0)
+        {
+            int remainingSeconds = Mathf.CeilToInt(transformationCooldown);
+            var currentTrans = unlockedTransformations[currentTransformationIndex];
+            transformationText.text = $"{currentTrans.bossName} ({remainingSeconds}s)";
+        }
+    }
+
+    public void UnlockTransformation(BossTransformation transformation)
+    {
+        if (!unlockedTransformations.Contains(transformation))
+        {
+            unlockedTransformations.Add(transformation);
+            Debug.Log($"Unlocked transformation: {transformation.bossName}!");
+            
+            StartCoroutine(ShowUnlockNotification(transformation));
+        }
+    }
+    
+    private IEnumerator ShowUnlockNotification(BossTransformation transformation)
+    {
+        Debug.Log($"🎉 NEW TRANSFORMATION UNLOCKED: {transformation.bossName}!");
+        yield return new WaitForSeconds(3f);
+    }
+    
+    public void OnBossDefeated(BossController boss)
+    {
+        BossTransformation transformation = FindTransformationForBoss(boss);
+        if (transformation != null)
+        {
+            UnlockTransformation(transformation);
+        }
+    }
+    
+    private BossTransformation FindTransformationForBoss(BossController boss)
+    {
+        if (boss is FireWizardBossController)
+        {
+            return Resources.Load<BossTransformation>("Transformations/FireWizardTransformation");
+        }
+        
+        return null;
     }
 
     private void UseItem(Item item)
