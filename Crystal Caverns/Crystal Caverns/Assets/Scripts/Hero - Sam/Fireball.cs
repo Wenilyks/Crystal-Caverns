@@ -138,7 +138,7 @@ public class Fireball : MonoBehaviour
 
     private void Explode()
     {
-        AudioManager.Instance.PlaySFX("Sphere explosion");
+        AudioManager.Instance?.PlaySFX("Sphere explosion");
         hasExploded = true;
 
         if (explosionEffect != null)
