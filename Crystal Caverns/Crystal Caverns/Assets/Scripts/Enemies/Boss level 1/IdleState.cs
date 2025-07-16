@@ -13,19 +13,20 @@ public class IdleState : BossState
     {
         boss.animator.SetInteger("state", 0);
         boss.rb.linearVelocity = Vector2.zero;
+
     }
 
     public override void Update()
     {
-        float distanceToPlayer = Vector2.Distance(boss.transform.position, boss.player.position);
+        float distanceToPlayer = boss.GetDistanceToPlayer();
+
         if (distanceToPlayer <= boss.attackRange)
         {
-            boss.ChangeState("Chasing");
+            boss.ChangeState(BossController.STATE_CHASING);
         }
     }
 
     public override void Exit()
     {
-        
     }
 }

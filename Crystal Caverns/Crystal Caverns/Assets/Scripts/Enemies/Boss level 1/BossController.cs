@@ -20,6 +20,20 @@ public abstract class BossController : MonoBehaviour, IDamageable
     public string hurtSoundName = "Boss_Hurt";
     public string attackSoundName = "Boss_Attack";
 
+    [Header("Behavior Settings")]
+    public float lostPlayerTime = 2f;
+    public float extendedRangeMultiplier = 2.5f;
+    public float baseAggressionMultiplier = 1f;
+    public float maxAggressionMultiplier = 2f;
+    public float aggressionIncreaseRate = 1.3f;
+    public float attackCooldownReduction = 0.3f;
+
+    // Constants for state names
+    public const string STATE_IDLE = "Idle";
+    public const string STATE_CHASING = "Chasing";
+    public const string STATE_HURT = "Hurt";
+    public const string STATE_DEATH = "Death";
+
     public float lastAttackTime;
     public bool isAttacking = false;
     protected bool facingRight = true;
@@ -29,6 +43,11 @@ public abstract class BossController : MonoBehaviour, IDamageable
     protected BossState currentState;
     protected Dictionary<string, BossState> states = new Dictionary<string, BossState>();
     protected List<AttackBehaviour> attacks = new List<AttackBehaviour>();
+
+    // Cached distance to avoid recalculation
+    protected float cachedDistanceToPlayer;
+    protected float lastDistanceUpdateTime;
+    protected const float DISTANCE_UPDATE_INTERVAL = 0.1f;
 
     public event Action<float> OnHealthChanged;
     public event Action OnDeath;
@@ -43,33 +62,49 @@ public abstract class BossController : MonoBehaviour, IDamageable
         if (player == null)
             player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
+        aggressionMultiplier = baseAggressionMultiplier;
         InitializeStates();
         InitializeAttacks();
 
-        ChangeState("Idle");
+        ChangeState(STATE_IDLE);
         lastAttackTime = Time.time;
     }
 
     protected virtual void Update()
     {
+        currentState?.Update();
         if (currentHealth <= 0)
         {
             if (currentState?.GetType().Name != "DeathState")
-                ChangeState("Death");
+                ChangeState(STATE_DEATH);
             return;
         }
 
+        if (Time.time - lastDistanceUpdateTime > DISTANCE_UPDATE_INTERVAL)
+        {
+            UpdateCachedDistance();
+        }
+
         UpdateBossLogic();
-        currentState?.Update();
+    }
+
+    protected virtual void UpdateCachedDistance()
+    {
+        cachedDistanceToPlayer = player ? Vector2.Distance(transform.position, player.position) : float.MaxValue;
+        lastDistanceUpdateTime = Time.time;
     }
 
     protected abstract void InitializeStates();
     protected abstract void InitializeAttacks();
     protected abstract void UpdateBossLogic();
 
+    public virtual float GetSpecialAttackRange() => attackRange;
+
+    public virtual float GetModifiedAttackCooldown() => attackCooldown;
+
     public virtual void ChangeState(string stateName)
     {
-        if (isAttacking && stateName != "Hurt" && stateName != "Death") return;
+        if (isAttacking && stateName != STATE_HURT && stateName != STATE_DEATH) return;
 
         if (states.ContainsKey(stateName))
         {
@@ -107,7 +142,7 @@ public abstract class BossController : MonoBehaviour, IDamageable
 
             if (consecutiveAttacks > 1)
             {
-                lastAttackTime = Time.time - (attackCooldown * 0.3f);
+                lastAttackTime = Time.time - (attackCooldown * attackCooldownReduction);
             }
         }
     }
@@ -126,18 +161,29 @@ public abstract class BossController : MonoBehaviour, IDamageable
 
         OnHealthChanged?.Invoke(currentHealth);
         consecutiveAttacks = 0;
-        aggressionMultiplier = Mathf.Min(aggressionMultiplier * 1.3f, 2f);
+        aggressionMultiplier = Mathf.Min(aggressionMultiplier * aggressionIncreaseRate, maxAggressionMultiplier);
 
         if (currentHealth > 0)
         {
-            ChangeState("Hurt");
+            ChangeState(STATE_HURT);
         }
         else
         {
+            ChangeState(STATE_DEATH);
             OnDeath?.Invoke();
         }
 
         Debug.Log($"Boss took {damage} damage. Health: {currentHealth}");
+    }
+
+    public virtual void InterruptAttack()
+    {
+        if (isAttacking)
+        {
+            StopAllCoroutines();
+            isAttacking = false;
+            animator?.SetInteger("state", 0);
+        }
     }
 
     public virtual void HandleFlip(float directionX)
@@ -158,7 +204,13 @@ public abstract class BossController : MonoBehaviour, IDamageable
 
     public float GetDistanceToPlayer()
     {
-        return player ? Vector2.Distance(transform.position, player.position) : float.MaxValue;
+        if (Time.time - lastDistanceUpdateTime <= DISTANCE_UPDATE_INTERVAL)
+        {
+            return cachedDistanceToPlayer;
+        }
+
+        UpdateCachedDistance();
+        return cachedDistanceToPlayer;
     }
 
     public Vector2 GetDirectionToPlayer()
@@ -166,9 +218,22 @@ public abstract class BossController : MonoBehaviour, IDamageable
         return player ? (player.position - transform.position).normalized : Vector2.zero;
     }
 
+    public float GetExtendedRange()
+    {
+        return attackRange * extendedRangeMultiplier;
+    }
+
     protected virtual void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, GetExtendedRange());
+    }
+
+    internal void DestroySelf()
+    {
+        Destroy(gameObject);
     }
 }

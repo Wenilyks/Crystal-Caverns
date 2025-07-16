@@ -12,12 +12,15 @@ public class FireWizardBossController : BossController
     public Transform firePoint;
     public GameObject fireballRainPrefab;
 
+    [Header("Fire Wizard Behavior")]
+    public float fireHandsCooldownMultiplier = 0.6f;
+
     protected override void InitializeStates()
     {
-        states["Idle"] = new IdleState(this);
-        states["Chasing"] = new ChasingState(this);
-        states["Hurt"] = new HurtState(this);
-        states["Death"] = new DeathState(this);
+        states[STATE_IDLE] = new IdleState(this);
+        states[STATE_CHASING] = new ChasingState(this);
+        states[STATE_HURT] = new HurtState(this);
+        states[STATE_DEATH] = new DeathState(this);
     }
 
     protected override void InitializeAttacks()
@@ -30,14 +33,31 @@ public class FireWizardBossController : BossController
     protected override void UpdateBossLogic()
     {
         float currentDistance = GetDistanceToPlayer();
+
+        if (currentDistance <= fireHandsRange)
+        {
+            aggressionMultiplier = Mathf.Min(aggressionMultiplier * 1.1f, maxAggressionMultiplier);
+        }
+    }
+
+    public override float GetSpecialAttackRange()
+    {
+        return fireHandsRange;
+    }
+
+    public override float GetModifiedAttackCooldown()
+    {
+        return attackCooldown * fireHandsCooldownMultiplier;
     }
 
     protected override float ModifyAttackPriority(AttackBehaviour attack, float basePriority)
     {
-        if (attack is FireHandsAttack && GetDistanceToPlayer() <= fireHandsRange)
+        float distance = GetDistanceToPlayer();
+
+        if (attack is FireHandsAttack && distance <= fireHandsRange)
             return basePriority * 1.5f;
 
-        if (attack is FireballAttack && GetDistanceToPlayer() > fireHandsRange)
+        if (attack is FireballAttack && distance > fireHandsRange)
             return basePriority * 1.2f;
 
         return basePriority;
@@ -47,7 +67,8 @@ public class FireWizardBossController : BossController
     {
         base.OnDrawGizmos();
 
-        Gizmos.color = Color.yellow;
+        // Draw fire hands range
+        Gizmos.color = Color.orange;
         Gizmos.DrawWireSphere(transform.position, fireHandsRange);
     }
 }

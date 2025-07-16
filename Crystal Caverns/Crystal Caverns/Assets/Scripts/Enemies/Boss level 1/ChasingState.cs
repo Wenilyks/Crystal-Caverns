@@ -5,13 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-
 public class ChasingState : BossState
 {
     private float lostPlayerTimer = 0f;
-    private float lostPlayerTime = 2f;
     private float lastPlayerDistance = 0f;
     private bool playerWasInRange = false;
+
+    private const float CATCHING_UP_SPEED_MULTIPLIER = 1.5f;
+    private const float PURSUIT_SPEED_MULTIPLIER = 1.3f;
+    private const float SPECIAL_ATTACK_COOLDOWN_MULTIPLIER = 0.6f;
+
     public ChasingState(BossController boss) : base(boss) { }
 
     public override void Enter()
@@ -23,7 +26,7 @@ public class ChasingState : BossState
 
     public override void Update()
     {
-        float distanceToPlayer = Vector2.Distance(boss.transform.position, boss.player.position);
+        float distanceToPlayer = boss.GetDistanceToPlayer();
 
         if (distanceToPlayer <= boss.attackRange)
         {
@@ -35,49 +38,67 @@ public class ChasingState : BossState
             lostPlayerTimer += Time.deltaTime;
         }
 
-        Vector2 direction = (boss.player.position - boss.transform.position).normalized;
-        float dynamicMoveSpeed = boss.moveSpeed;
+        Vector2 direction = boss.GetDirectionToPlayer();
+        float dynamicMoveSpeed = CalculateDynamicMoveSpeed(distanceToPlayer);
 
-        if (distanceToPlayer > lastPlayerDistance && distanceToPlayer < boss.attackRange)
-        {
-            dynamicMoveSpeed *= 1.5f;
-        }
-
-        if (playerWasInRange && lostPlayerTimer < lostPlayerTime)
-        {
-            dynamicMoveSpeed *= 1.3f;
-        }
-
-        boss.rb.linearVelocity = new Vector2(direction.x * dynamicMoveSpeed, boss.rb.linearVelocityY);
+        boss.rb.linearVelocity = new Vector2(direction.x * dynamicMoveSpeed, boss.rb.linearVelocity.y);
         boss.HandleFlip(direction.x);
 
-        bool shouldAttack = false;
-
-        if (distanceToPlayer <= boss.attackRange && !playerWasInRange)
-        {
-            shouldAttack = true;
-        }
-        else if (distanceToPlayer <= boss.attackRange &&
-                 Time.time - boss.lastAttackTime >= boss.attackCooldown)
-        {
-            shouldAttack = true;
-        }
-        else if (distanceToPlayer <= ((FireWizardBossController)boss).fireHandsRange &&
-                 Time.time - boss.lastAttackTime >= boss.attackCooldown * 0.6f)
-        {
-            shouldAttack = true;
-        }
-
-        if (shouldAttack && !boss.isAttacking)
+        if (ShouldAttack(distanceToPlayer) && !boss.isAttacking)
         {
             boss.SelectExecuteAttack();
         }
 
-        float extendedRange = boss.attackRange * 2.5f;
-        if (distanceToPlayer > extendedRange && lostPlayerTimer > lostPlayerTime)
+        if (ShouldReturnToIdle(distanceToPlayer))
         {
-            boss.ChangeState("Idle");
+            boss.ChangeState(BossController.STATE_IDLE);
         }
+    }
+
+    private float CalculateDynamicMoveSpeed(float distanceToPlayer)
+    {
+        float dynamicMoveSpeed = boss.moveSpeed;
+
+        if (distanceToPlayer > lastPlayerDistance && distanceToPlayer < boss.attackRange)
+        {
+            dynamicMoveSpeed *= CATCHING_UP_SPEED_MULTIPLIER;
+        }
+
+        if (playerWasInRange && lostPlayerTimer < boss.lostPlayerTime)
+        {
+            dynamicMoveSpeed *= PURSUIT_SPEED_MULTIPLIER;
+        }
+
+        lastPlayerDistance = distanceToPlayer;
+        return dynamicMoveSpeed;
+    }
+
+    private bool ShouldAttack(float distanceToPlayer)
+    {
+        if (distanceToPlayer <= boss.attackRange && !playerWasInRange)
+        {
+            return true;
+        }
+
+        if (distanceToPlayer <= boss.attackRange &&
+            Time.time - boss.lastAttackTime >= boss.attackCooldown)
+        {
+            return true;
+        }
+
+        if (distanceToPlayer <= boss.GetSpecialAttackRange() &&
+            Time.time - boss.lastAttackTime >= boss.GetModifiedAttackCooldown() * SPECIAL_ATTACK_COOLDOWN_MULTIPLIER)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool ShouldReturnToIdle(float distanceToPlayer)
+    {
+        float extendedRange = boss.GetExtendedRange();
+        return distanceToPlayer > extendedRange && lostPlayerTimer > boss.lostPlayerTime;
     }
 
     public override void Exit()
@@ -85,5 +106,4 @@ public class ChasingState : BossState
         boss.rb.linearVelocity = Vector2.zero;
         playerWasInRange = false;
     }
-
 }
