@@ -484134,19 +484134,21 @@ MonoBehaviour:
   currentHealth: 0
   moveSpeed: 2
   attackRange: 10
-  fireHandsRange: 2
   attackCooldown: 2
+  player: {fileID: 1681797490}
+  rb: {fileID: 0}
+  animator: {fileID: 0}
+  hurtSoundName: Boss_Hurt
+  attackSoundName: Boss_Attack
+  lastAttackTime: 0
+  isAttacking: 0
+  fireHandsRange: 2
   fireHandsDamage: 20
   fireballDamage: 15
   fireballRainDamage: 10
-  player: {fileID: 1681797490}
   fireballPrefab: {fileID: 6845201832380516912, guid: eadeee6edde89284a9816008e5aabbd1, type: 3}
   firePoint: {fileID: 1841593091}
   fireballRainPrefab: {fileID: 6845201832380516912, guid: cc7ada67534eacb48a85c8e758c97cb9, type: 3}
-  rb: {fileID: 0}
-  animator: {fileID: 0}
-  lastAttackTime: 0
-  isAttacking: 0
 --- !u!1 &2147112776
 GameObject:
   m_ObjectHideFlags: 0
@@ -484337,6 +484339,14 @@ PrefabInstance:
       propertyPath: rainFireballMagicCost
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 6006870706029379608, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
+      propertyPath: unlockedTransformations.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6006870706029379608, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
+      propertyPath: 'unlockedTransformations.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: a8e8eca5c56e0c440805e30b0e544324, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
