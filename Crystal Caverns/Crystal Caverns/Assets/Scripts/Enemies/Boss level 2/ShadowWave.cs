@@ -8,12 +8,14 @@ public class ShadowWave : MonoBehaviour
     private Rigidbody2D rb;
     private float lifetime = 3f;
     private bool hasHitPlayer = false;
+    private bool isUsedByPlayer = false;
 
-    public void Initialize(float waveSpeed, Vector2 waveDirection, float waveDamage)
+    public void Initialize(float waveSpeed, Vector2 waveDirection, float waveDamage, bool isUsedByPlayer = false)
     {
         speed = waveSpeed;
         direction = waveDirection.normalized;
         damage = waveDamage;
+        this.isUsedByPlayer = isUsedByPlayer;
 
         rb = GetComponent<Rigidbody2D>();
         if (rb == null)
@@ -50,7 +52,7 @@ public class ShadowWave : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !hasHitPlayer)
+        if (other.CompareTag("Player") && !hasHitPlayer && !isUsedByPlayer)
         {
             hasHitPlayer = true;
             Hero2 player = other.GetComponent<Hero2>();
@@ -61,6 +63,19 @@ public class ShadowWave : MonoBehaviour
 
             AudioManager.Instance?.PlaySFX("Shadow_Wave_Hit");
         }
+
+        if (other.CompareTag("Enemy") && !hasHitPlayer)
+        {
+            hasHitPlayer= true;
+            IDamageable enemy = other.GetComponent<IDamageable>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(damage);
+            }
+
+            AudioManager.Instance?.PlaySFX("Shadow_Wave_Hit");
+        }
+
         else if (other.CompareTag("Ground"))
         {
             Destroy(gameObject, 2f);

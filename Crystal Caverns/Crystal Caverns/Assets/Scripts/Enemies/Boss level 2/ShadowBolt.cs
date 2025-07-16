@@ -9,12 +9,14 @@ public class ShadowBolt : MonoBehaviour
     private float lifetime = 5f;
     private float hitTimeCooldown = 2f;
     private float hitTimerCooldown = 2f;
+    private bool isUsedByPlayer = false;
 
-    public void Initialize(float boltSpeed, Vector2 boltDirection, float boltDamage)
+    public void Initialize(float boltSpeed, Vector2 boltDirection, float boltDamage, bool isUsedByPlayer = false)
     {
         speed = boltSpeed;
         direction = boltDirection.normalized;
         damage = boltDamage;
+        this.isUsedByPlayer = isUsedByPlayer;
 
         rb = GetComponent<Rigidbody2D>();
         if (rb == null)
@@ -31,7 +33,7 @@ public class ShadowBolt : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !isUsedByPlayer)
         {
             if (hitTimerCooldown >= hitTimeCooldown)
             {
@@ -53,6 +55,24 @@ public class ShadowBolt : MonoBehaviour
         else if (other.CompareTag("Ground"))
         {
             Destroy(gameObject, 3f);
+        }
+        else if (other.CompareTag("Enemy"))
+        {
+            if (hitTimerCooldown >= hitTimeCooldown)
+            {
+                IDamageable enemy = other.GetComponent<IDamageable>();
+                if (enemy != null)
+                {
+                    enemy.TakeDamage(damage);
+                }
+                hitTimerCooldown = 0f;
+                AudioManager.Instance?.PlaySFX("Shadow_Impact");
+
+                GetComponentInChildren<Animator>().SetTrigger("endAttack");
+                Destroy(gameObject, 3f);
+            }
+
+            hitTimerCooldown += Time.deltaTime;
         }
     }
 }

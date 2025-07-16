@@ -19239,7 +19239,7 @@ GameObject:
   - component: {fileID: 729909532}
   m_Layer: 29
   m_Name: FlyingEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21158,7 +21158,7 @@ GameObject:
   - component: {fileID: 970669795}
   m_Layer: 29
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -484162,6 +484162,12 @@ MonoBehaviour:
   animator: {fileID: 0}
   hurtSoundName: Boss_Hurt
   attackSoundName: Boss_Attack
+  lostPlayerTime: 2
+  extendedRangeMultiplier: 2.5
+  baseAggressionMultiplier: 1
+  maxAggressionMultiplier: 2
+  aggressionIncreaseRate: 1.3
+  attackCooldownReduction: 0.3
   lastAttackTime: 0
   isAttacking: 0
   fireHandsRange: 2
@@ -484171,6 +484177,7 @@ MonoBehaviour:
   fireballPrefab: {fileID: 6845201832380516912, guid: eadeee6edde89284a9816008e5aabbd1, type: 3}
   firePoint: {fileID: 1841593091}
   fireballRainPrefab: {fileID: 6845201832380516912, guid: cc7ada67534eacb48a85c8e758c97cb9, type: 3}
+  fireHandsCooldownMultiplier: 0.6
 --- !u!1 &2147112776
 GameObject:
   m_ObjectHideFlags: 0
@@ -484445,7 +484452,7 @@ PrefabInstance:
     - target: {fileID: 6006870706029379608, guid: 852d1a4daa8c0fc49bbac9f15ec6fca7, type: 3}
       propertyPath: 'unlockedTransformations.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: 1d645c4a714fd574e93ed2f5291a2d0e, type: 2}
+      objectReference: {fileID: 11400000, guid: 95051cdf8cfd4bc4383bb0197f68e641, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

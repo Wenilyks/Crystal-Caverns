@@ -356,6 +356,8 @@ public class Hero2 : MonoBehaviour, IDamageable
         if (currentTransformation.bossAnimator != null)
         {
             anim.runtimeAnimatorController = currentTransformation.bossAnimator;
+            if (currentTransformation.bossAnimator.name == "boss 2 controller")
+                spriteHolder2.GetComponent<SpriteRenderer>().flipX = true;
         }
         
         SpriteRenderer spriteRenderer = spriteHolder2.GetComponent<SpriteRenderer>();
@@ -394,6 +396,8 @@ public class Hero2 : MonoBehaviour, IDamageable
     
     private void RestoreOriginalVisuals()
     {
+        if (currentTransformation.bossAnimator.name == "boss 2 controller")
+            spriteHolder2.GetComponent<SpriteRenderer>().flipX = false;
         anim.runtimeAnimatorController = originalAnimator;
         
         SpriteRenderer spriteRenderer = spriteHolder2.GetComponent<SpriteRenderer>();
@@ -477,7 +481,7 @@ public class Hero2 : MonoBehaviour, IDamageable
         isAttacking = false;
         canAttack = true;
     }
-    
+
     private void ExecuteAbilityEffect(BossAbility ability)
     {
         switch (ability.abilityName)
@@ -491,6 +495,18 @@ public class Hero2 : MonoBehaviour, IDamageable
             case "Fireball Rain":
                 StartCoroutine(SpawnBossFireballRain(ability));
                 break;
+            case "Shadow Bolt":
+                ExecuteShadowBolt(ability);
+                break;
+            case "Shadow Wave":
+                StartCoroutine(ExecuteShadowWave(ability));
+                break;
+            case "Shadow Strike":
+                ExecuteShadowStrike(ability);
+                break;
+            case "Shadow Teleport":
+                StartCoroutine(ExecuteShadowTeleport(ability));
+                break;
             default:
                 if (ability.effectPrefab != null)
                 {
@@ -500,7 +516,142 @@ public class Hero2 : MonoBehaviour, IDamageable
                 break;
         }
     }
-    
+
+    private void ExecuteShadowBolt(BossAbility ability)
+    {
+        ShadowBossTransformation shadowTransform = currentTransformation as ShadowBossTransformation;
+        if (shadowTransform?.shadowBoltPrefab == null) return;
+
+        GameObject shadowBolt = Instantiate(shadowTransform.shadowBoltPrefab, fireballSpawnPoint.position, Quaternion.identity);
+        shadowBolt.GetComponentInChildren<SpriteRenderer>().color = new Color(0.5f, 0f, 0.8f, 1f);
+
+        float direction = spriteHolder2.localScale.x > 0 ? 1 : -1;
+        Vector2 boltDirection = new Vector2(direction, 0);
+
+        ShadowBolt boltScript = shadowBolt.GetComponent<ShadowBolt>();
+        if (boltScript == null)
+        {
+            boltScript = shadowBolt.AddComponent<ShadowBolt>();
+        }
+
+        boltScript.Initialize(10f, boltDirection, ability.damage, true);
+
+        AudioManager.Instance?.PlaySFX("Shadow_Bolt");
+    }
+
+    private IEnumerator ExecuteShadowWave(BossAbility ability)
+    {
+        ShadowBossTransformation shadowTransform = currentTransformation as ShadowBossTransformation;
+        if (shadowTransform?.shadowWavePrefab == null) yield break;
+
+        int waveCount = 5;
+        for (int i = 0; i < waveCount; i++)
+        {
+            float angle = (180f / (waveCount - 1)) * i - 90f; 
+            Vector2 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+
+            if (spriteHolder2.localScale.x < 0)
+            {
+                direction.x = -direction.x;
+            }
+
+            Vector3 spawnPos = transform.position + (Vector3)(direction * 1.5f);
+            GameObject shadowWave = Instantiate(shadowTransform.shadowWavePrefab, spawnPos, Quaternion.identity);
+
+            shadowWave.GetComponentInChildren<SpriteRenderer>().color = new Color(0.3f, 0f, 0.5f, 0.8f);
+
+            ShadowWave waveScript = shadowWave.GetComponent<ShadowWave>();
+            if (waveScript == null)
+            {
+                waveScript = shadowWave.AddComponent<ShadowWave>();
+            }
+
+            waveScript.Initialize(6f, direction, ability.damage, true);
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        AudioManager.Instance?.PlaySFX("Shadow_Wave");
+    }
+
+    private void ExecuteShadowStrike(BossAbility ability)
+    {
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, ability.range, enemyLayer);
+
+        foreach (Collider2D enemy in hitEnemies)
+        {
+            IDamageable enemyScript = enemy.GetComponent<IDamageable>();
+            if (enemyScript != null)
+            {
+                enemyScript.TakeDamage(ability.damage);
+
+                Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
+                if (enemyRb != null)
+                {
+                    Vector2 knockbackDirection = (enemy.transform.position - transform.position).normalized;
+                    enemyRb.AddForce(knockbackDirection * 30f, ForceMode2D.Impulse);
+                }
+            }
+        }
+
+        if (groundPoundEffect != null)
+        {
+            GameObject effect = Instantiate(groundPoundEffect, transform.position, Quaternion.identity);
+            effect.GetComponent<SpriteRenderer>().color = new Color(0.3f, 0f, 0.5f, 0.8f);
+            Destroy(effect, 2f);
+        }
+
+        AudioManager.Instance?.PlaySFX("Shadow_Strike");
+    }
+
+    private IEnumerator ExecuteShadowTeleport(BossAbility ability)
+    {
+        SpriteRenderer sprite = spriteHolder2.GetComponent<SpriteRenderer>();
+        if (sprite != null)
+        {
+            Color originalColor = sprite.color;
+            float fadeTime = 0.3f;
+            float elapsedTime = 0f;
+
+            while (elapsedTime < fadeTime)
+            {
+                elapsedTime += Time.deltaTime;
+                float alpha = Mathf.Lerp(1f, 0.2f, elapsedTime / fadeTime);
+                sprite.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+                yield return null;
+            }
+        }
+
+        float teleportDistance = 5f;
+        float direction = spriteHolder2.localScale.x > 0 ? 1 : -1;
+        Vector3 teleportPosition = transform.position + new Vector3(direction * teleportDistance, 0, 0);
+
+        RaycastHit2D groundHit = Physics2D.Raycast(teleportPosition, Vector2.down, 5f, groundLayer);
+        if (groundHit.collider != null)
+        {
+            teleportPosition.y = groundHit.point.y + 1f; 
+        }
+
+        transform.position = teleportPosition;
+
+        if (sprite != null)
+        {
+            Color originalColor = sprite.color;
+            float fadeTime = 0.3f;
+            float elapsedTime = 0f;
+
+            while (elapsedTime < fadeTime)
+            {
+                elapsedTime += Time.deltaTime;
+                float alpha = Mathf.Lerp(0.2f, 1f, elapsedTime / fadeTime);
+                sprite.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+                yield return null;
+            }
+        }
+
+        AudioManager.Instance?.PlaySFX("Shadow_Teleport");
+    }
+
     private void SpawnBossFireball(BossAbility ability)
     {
         GameObject fireball = Instantiate(fireballPrefab, fireballSpawnPoint.position, Quaternion.identity);
@@ -624,14 +775,18 @@ public class Hero2 : MonoBehaviour, IDamageable
             UnlockTransformation(transformation);
         }
     }
-    
+
     private BossTransformation FindTransformationForBoss(BossController boss)
     {
         if (boss is FireWizardBossController)
         {
             return Resources.Load<BossTransformation>("Transformations/FireWizardTransformation");
         }
-        
+        else if (boss is ShadowBossController)
+        {
+            return Resources.Load<BossTransformation>("Transformations/ShadowBossTransformation");
+        }
+
         return null;
     }
 
