@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd19d7bd274edf48b79255fec24c474, type: 3}
+  m_Name: Boss level 1 transforming 1
+  m_EditorClassIdentifier: Assembly-CSharp::BossTransformation
+  bossName: Fire wizard 2
+  bossSprite: {fileID: 4723107735738678597, guid: 7e0d03d81fb5acd48ba042e0bf85ec6c, type: 3}
+  bossAnimator: {fileID: 9100000, guid: fe3da8d7e94c0fb4fb207bc865f10b00, type: 2}
+  abilities:
+  - {fileID: 11400000, guid: 57da3ae3b4d093b4399368f4382fec1a, type: 2}
+  - {fileID: 11400000, guid: 66fabc9af4275544f9fcb286e081680c, type: 2}
+  transformationDuration: 30
+  magicCostPerSecond: 2
+  transformationColor: {r: 1, g: 1, b: 1, a: 1}
+  transformationEffect: {fileID: 0}
+  moveSpeedMultiplier: 1.2
+  healthMultiplier: 1.5
+  magicMultiplier: 1.3
