@@ -5,9 +5,9 @@ public class FireWizardBossController : BossController
 {
     [Header("Fire Wizard Specific")]
     public float fireHandsRange = 2f;
-    public float fireHandsDamage = 20f;
-    public float fireballDamage = 15f;
-    public float fireballRainDamage = 10f;
+    public float fireHandsDamage = 30f;
+    public float fireballDamage = 20f;
+   
     public GameObject fireballPrefab;
     public Transform firePoint;
     public GameObject fireballRainPrefab;
