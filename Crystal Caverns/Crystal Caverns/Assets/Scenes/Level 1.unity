@@ -482573,7 +482573,6 @@ MonoBehaviour:
   fireHandsRange: 2
   fireHandsDamage: 20
   fireballDamage: 15
-  fireballRainDamage: 10
   fireballPrefab: {fileID: 6845201832380516912, guid: eadeee6edde89284a9816008e5aabbd1, type: 3}
   firePoint: {fileID: 1841593091}
   fireballRainPrefab: {fileID: 6845201832380516912, guid: cc7ada67534eacb48a85c8e758c97cb9, type: 3}
@@ -482768,8 +482767,29 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5521155666581181136, guid: 84509d266ede4a140a3075ab1da83459, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1046629728522234018}
   m_SourcePrefab: {fileID: 100100000, guid: 84509d266ede4a140a3075ab1da83459, type: 3}
+--- !u!1 &1046629728522234017 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5521155666581181136, guid: 84509d266ede4a140a3075ab1da83459, type: 3}
+  m_PrefabInstance: {fileID: 1046629728522234016}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1046629728522234018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1046629728522234017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c7bad33192197e40a376d5a4126f862, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoadOnEnter
+  sceneToLoad: Level 2
 --- !u!1001 &5997193081747883306
 PrefabInstance:
   m_ObjectHideFlags: 0
